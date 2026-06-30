@@ -15,11 +15,12 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Database Connection Helper (Update with your actual Supabase URI string)
-DATABASE_URL = "postgresql://postgres:systemppG99qb45Kgt7N9Z@db.piuhurxlsbegvozbciix.supabase.co:5432/postgres"
+# இந்த வரியில எக்ஸ்ட்ரா ஸ்பேஸ் இல்லாம நேரா இருக்கான்னு பாருங்க
+SQLALCHEMY_DATABASE_URL = "postgresql://postgres:.2589630147894@db.piuhurxlsbegvozbciix.supabase.co:5432/postgres"
+
 def get_db():
     try:
-        conn = psycopg2.connect(DATABASE_URL, cursor_factory=RealDictCursor)
+        conn = psycopg2.connect(SQLALCHEMY_DATABASE_URL, cursor_factory=RealDictCursor)
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Database connection failed: {e}")
     try:
