@@ -16,9 +16,12 @@ app.add_middleware(
 )
 
 # Database Connection Helper (Update with your actual Supabase URI string)
-DATABASE_URL = "postgresql://postgres:[systemppG99qb45Kgt7N9Z]@db.piuhurxlsbegvozbciix.supabase.co:5432/postgres"
+DATABASE_URL = "postgresql://postgres:systemppG99qb45Kgt7N9Z@db.piuhurxlsbegvozbciix.supabase.co:5432/postgres"
 def get_db():
-    conn = psycopg2.connect(DATABASE_URL, cursor_factory=RealDictCursor)
+    try:
+        conn = psycopg2.connect(DATABASE_URL, cursor_factory=RealDictCursor)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Database connection failed: {e}")
     try:
         yield conn
     finally:
