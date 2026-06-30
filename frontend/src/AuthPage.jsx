@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { User, Lock, Mail, Phone, ShieldCheck, CheckCircle2, AlertCircle, Eye, EyeOff, UserPlus, LogIn } from 'lucide-react';
+import '../App.css';
 
 const API_BASE_URL = "http://127.0.0.1:8000/api/auth";
 
