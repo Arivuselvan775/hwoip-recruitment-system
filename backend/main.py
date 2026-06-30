@@ -80,10 +80,12 @@ def register_candidate(data: CandidateRegisterSchema, conn=Depends(get_db)):
         conn.rollback()
         raise HTTPException(status_code=500, detail=str(e))
 
-# 2. UNIVERSAL AUTHENTICATION LOGIN ENDPOINT
+# 2. LOGIN API (UPDATED FOR EXACT STRING MATCHING)
 @app.post("/api/auth/login")
 def login(data: LoginSchema, conn=Depends(get_db)):
     cursor = conn.cursor()
+    
+    # Selecting the corresponding matching user profile entries
     cursor.execute(
         """
         SELECT u.id, u.username, u.email, u.password_hash, r.role_name 
@@ -95,8 +97,17 @@ def login(data: LoginSchema, conn=Depends(get_db)):
     )
     user = cursor.fetchone()
 
-    if not user or user['password_hash'] != data.password:
-        raise HTTPException(status_code=401, detail="Invalid username/email or password.")
+    # Checking if user exists in the database
+    if not user:
+        raise HTTPException(status_code=401, detail="🚨 Account text check failed: User template found illai!")
+
+    # Exact Plain-text password check alignment for Day 1
+    # Strip function uses space alignments handling to prevent copy-paste spaces
+    db_password = str(user['password_hash']).strip()
+    input_password = str(data.password).strip()
+
+    if db_password != input_password:
+        raise HTTPException(status_code=401, detail="🚨 Password Mismatch: Database hash match aagala!")
 
     return {
         "status": "success",
