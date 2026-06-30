@@ -81,7 +81,6 @@ export default function AuthPage() {
     inputBg: isDarkMode ? 'rgba(15, 23, 42, 0.6)' : '#ffffff',
   };
 
-  // Shared Card Template styling to optimize clean setup
   const cardStyle = {
     background: colors.cardBg, backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
     padding: '40px', borderRadius: '24px', border: `1px solid ${colors.border}`,
@@ -270,7 +269,7 @@ export default function AuthPage() {
                   <label style={{ display: 'block', marginBottom: '4px', fontSize: '11px', fontWeight: '600', color: colors.textMuted }}>FULL NAME</label>
                   <div style={{ position: 'relative' }}>
                     <User size={15} style={{ position: 'absolute', left: '12px', top: '12px', color: colors.textMuted }} />
-                    <input type="text" value={regName} onChange={(e) => setRegName(e.target.value)} required style={{ padding: '11px 12px 11px 36px', borderRadius: '8px', border: `1px solid ${colors.border}`, background: colors.inputBg, color: colors.textMain }} />
+                    <input type="text" value={regName} onChange={(e) => setRegName(e.target.value)} required placeholder="e.g. John Doe" style={{ padding: '11px 12px 11px 36px', borderRadius: '8px', border: `1px solid ${colors.border}`, background: colors.inputBg, color: colors.textMain }} />
                   </div>
                 </div>
 
@@ -278,7 +277,7 @@ export default function AuthPage() {
                   <label style={{ display: 'block', marginBottom: '4px', fontSize: '11px', fontWeight: '600', color: colors.textMuted }}>CONTACT MOBILE</label>
                   <div style={{ position: 'relative' }}>
                     <Phone size={15} style={{ position: 'absolute', left: '12px', top: '12px', color: colors.textMuted }} />
-                    <input type="text" value={regMobile} onChange={(e) => setRegMobile(e.target.value)} required style={{ padding: '11px 12px 11px 36px', borderRadius: '8px', border: `1px solid ${colors.border}`, background: colors.inputBg, color: colors.textMain }} />
+                    <input type="text" value={regMobile} onChange={(e) => setRegMobile(e.target.value)} required placeholder="e.g. +91 9876543210" style={{ padding: '11px 12px 11px 36px', borderRadius: '8px', border: `1px solid ${colors.border}`, background: colors.inputBg, color: colors.textMain }} />
                   </div>
                 </div>
 
@@ -286,7 +285,7 @@ export default function AuthPage() {
                   <label style={{ display: 'block', marginBottom: '4px', fontSize: '11px', fontWeight: '600', color: colors.textMuted }}>SYSTEM USERNAME</label>
                   <div style={{ position: 'relative' }}>
                     <User size={15} style={{ position: 'absolute', left: '12px', top: '12px', color: colors.textMuted }} />
-                    <input type="text" value={regUser} onChange={(e) => setRegUser(e.target.value)} required style={{ padding: '11px 12px 11px 36px', borderRadius: '8px', border: `1px solid ${colors.border}`, background: colors.inputBg, color: colors.textMain }} />
+                    <input type="text" value={regUser} onChange={(e) => setRegUser(e.target.value)} required placeholder="Choose a unique username" style={{ padding: '11px 12px 11px 36px', borderRadius: '8px', border: `1px solid ${colors.border}`, background: colors.inputBg, color: colors.textMain }} />
                   </div>
                 </div>
 
@@ -294,7 +293,7 @@ export default function AuthPage() {
                   <label style={{ display: 'block', marginBottom: '4px', fontSize: '11px', fontWeight: '600', color: colors.textMuted }}>EMAIL CORRESPONDENCE</label>
                   <div style={{ position: 'relative' }}>
                     <Mail size={15} style={{ position: 'absolute', left: '12px', top: '12px', color: colors.textMuted }} />
-                    <input type="email" value={regEmail} onChange={(e) => setRegEmail(e.target.value)} required style={{ padding: '11px 12px 11px 36px', borderRadius: '8px', border: `1px solid ${colors.border}`, background: colors.inputBg, color: colors.textMain }} />
+                    <input type="email" value={regEmail} onChange={(e) => setRegEmail(e.target.value)} required placeholder="name@company.com" style={{ padding: '11px 12px 11px 36px', borderRadius: '8px', border: `1px solid ${colors.border}`, background: colors.inputBg, color: colors.textMain }} />
                   </div>
                 </div>
 
@@ -302,7 +301,7 @@ export default function AuthPage() {
                   <label style={{ display: 'block', marginBottom: '4px', fontSize: '11px', fontWeight: '600', color: colors.textMuted }}>PORTAL ACCESS PASSWORD</label>
                   <div style={{ position: 'relative' }}>
                     <Lock size={15} style={{ position: 'absolute', left: '12px', top: '12px', color: colors.textMuted }} />
-                    <input type="password" value={regPass} onChange={(e) => setRegPass(e.target.value)} required style={{ padding: '11px 12px 11px 36px', borderRadius: '8px', border: `1px solid ${colors.border}`, background: colors.inputBg, color: colors.textMain }} />
+                    <input type="password" value={regPass} onChange={(e) => setRegPass(e.target.value)} required placeholder="Min 8 characters securely..." style={{ padding: '11px 12px 11px 36px', borderRadius: '8px', border: `1px solid ${colors.border}`, background: colors.inputBg, color: colors.textMain }} />
                   </div>
                 </div>
 
