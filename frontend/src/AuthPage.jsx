@@ -228,7 +228,7 @@ export default function AuthPage() {
                 <label style={{ display: 'block', marginBottom: '4px', fontSize: '11px', fontWeight: '600', color: colors.textMuted }}>CONTACT MOBILE</label>
                 <div style={{ position: 'relative' }}>
                   <Phone size={15} style={{ position: 'absolute', left: '12px', top: '12px', color: colors.textMuted }} />
-                  <input type="text" value={regMobile} onChange={(e) => setRegMobile(e.target.value)} required style={{ width: '100%', padding: '11px 12px 11px 36px', borderRadius: '8px', border: `1px solid ${colors.border}`, background: colors.inputBg, color: colors.textMain }} />
+                  <input type="number" value={regMobile} onChange={(e) => setRegMobile(e.target.value)} required style={{ width: '100%', padding: '11px 12px 11px 36px', borderRadius: '8px', border: `1px solid ${colors.border}`, background: colors.inputBg, color: colors.textMain }} />
                 </div>
               </div>
 
