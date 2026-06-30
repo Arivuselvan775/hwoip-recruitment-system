@@ -6,81 +6,41 @@
 }
 
 body {
-  background-color: #0b0f19;
-  color: #f8fafc;
   font-family: 'Inter', system-ui, -apple-system, sans-serif;
   overflow-x: hidden;
   min-height: 100vh;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Premium 3D Input Text-box Control Styling */
+/* Smooth Interactive Styling */
 input {
-  background: rgba(15, 23, 42, 0.6) !important;
-  border: 1px solid rgba(255, 255, 255, 0.05) !important;
-  border-top: 2px solid rgba(0, 0, 0, 0.4) !important;
-  border-left: 1px solid rgba(0, 0, 0, 0.3) !important;
-  color: #ffffff !important;
-  border-radius: 14px !important;
-  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5), 0 1px 0px rgba(255, 255, 255, 0.05) !important;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  width: 100%;
+  box-sizing: border-box;
+  outline: none;
+  font-size: 14px;
+  transition: all 0.2s ease;
 }
 
-input:focus {
-  border-color: #3b82f6 !important;
-  border-top-color: #3b82f6 !important;
-  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.6), 0 0 0 3px rgba(59, 130, 246, 0.25) !important;
-  background: rgba(15, 23, 42, 0.8) !important;
-}
-
-input::placeholder {
-  color: #475569 !important;
-  font-size: 13px;
-}
-
-/* 3D Modern Layered Buttons */
 button {
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+  transition: all 0.2s ease;
+}
+
+button:hover {
+  filter: brightness(1.05);
 }
 
 button:active {
-  transform: translateY(3px) !important;
-  box-shadow: 0 2px 0px rgba(0, 0, 0, 0.7) !important;
+  transform: scale(0.98);
 }
 
-/* Custom Navigation Selection Bar Highlight Active State Layer */
-.active-tab {
-  background: rgba(255, 255, 255, 0.08) !important;
-  border: 1px solid rgba(255, 255, 255, 0.15) !important;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-
-/* Responsive Custom Glass Container Scrollbar Configuration */
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: #0b0f19;
-}
-
-::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 20px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.2);
-}
-
-/* Core System Keyframe Animations Templates */
+/* Core Toast Slide-In Animation */
 @keyframes slideIn {
   0% {
-    transform: translateX(120%) translateY(-10px) scale(0.9);
+    transform: translateX(120%) scale(0.95);
     opacity: 0;
   }
   100% {
-    transform: translateX(0) translateY(0) scale(1);
+    transform: translateX(0) scale(1);
     opacity: 1;
   }
 }
