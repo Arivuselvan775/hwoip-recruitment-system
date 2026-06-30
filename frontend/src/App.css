@@ -44,3 +44,14 @@ button:active {
     opacity: 1;
   }
 }
+/* Chrome, Safari, Edge, Opera-la ulla arrows-ah maraika */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox-la ulla arrows-ah maraika */
+input[type=number] {
+  -moz-appearance: textfield;
+}
