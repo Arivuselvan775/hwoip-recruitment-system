@@ -8,7 +8,7 @@ const API_BASE_URL = "http://127.0.0.1:8000/api/auth";
 export default function AuthPage() {
   const [viewMode, setViewMode] = useState('LOGIN'); // 'LOGIN' or 'REGISTER'
   const [showPassword, setShowPassword] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false); // 💡 NEW: Theme Switch State
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   // 1. Pure Blank Login States 
   const [loginUsername, setLoginUsername] = useState('');
@@ -74,23 +74,43 @@ export default function AuthPage() {
   // 🎨 Dynamic Colors Based on Theme State
   const colors = {
     bg: isDarkMode ? '#0f172a' : '#f8fafc',
-    cardBg: isDarkMode ? 'rgba(30, 41, 59, 0.7)' : 'rgba(255, 255, 255, 0.75)',
+    cardBg: isDarkMode ? 'rgba(30, 41, 59, 0.9)' : 'rgba(255, 255, 255, 0.95)',
     border: isDarkMode ? 'rgba(255, 255, 255, 0.08)' : 'rgba(15, 23, 42, 0.08)',
     textMain: isDarkMode ? '#f8fafc' : '#0f172a',
     textMuted: isDarkMode ? '#94a3b8' : '#64748b',
     inputBg: isDarkMode ? 'rgba(15, 23, 42, 0.6)' : '#ffffff',
-    tabActive: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(15, 23, 42, 0.05)',
+  };
+
+  // Shared Card Template styling to optimize clean setup
+  const cardStyle = {
+    background: colors.cardBg, backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
+    padding: '40px', borderRadius: '24px', border: `1px solid ${colors.border}`,
+    boxShadow: isDarkMode ? '0 25px 50px -12px rgba(0, 0, 0, 0.4)' : '0 25px 50px -12px rgba(15, 23, 42, 0.08)',
+    boxSizing: 'border-box'
   };
 
   return (
     <div style={{ 
       position: 'relative', display: 'flex', justifyContent: 'center', alignItems: 'center', 
       minHeight: '100vh', width: '100vw', background: colors.bg, overflow: 'hidden', 
-      fontFamily: 'system-ui, sans-serif', padding: '20px', boxSizing: 'border-box',
+      fontFamily: 'system-ui, sans-serif', padding: '40px 20px', boxSizing: 'border-box',
       transition: 'background-color 0.3s ease'
     }}>
       
-    
+      {/* 🌓 Floating Theme Changer Button */}
+      <button 
+        type="button"
+        onClick={() => setIsDarkMode(!isDarkMode)}
+        style={{
+          position: 'absolute', top: '24px', right: '24px',
+          background: colors.cardBg, border: `1px solid ${colors.border}`,
+          padding: '12px', borderRadius: '50%', cursor: 'pointer', zIndex: 100,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.05)', color: colors.textMain
+        }}
+      >
+        {isDarkMode ? <Sun size={20} style={{ color: '#fbbf24' }} /> : <Moon size={20} style={{ color: '#6366f1' }} />}
+      </button>
 
       {/* 🔔 Slide-in Custom Toast System Notifications */}
       {toast.show && (
@@ -110,158 +130,190 @@ export default function AuthPage() {
         </div>
       )}
 
-      {/* 🔮 Aesthetic Gradient Backdrop Shapes (Dynamic opacity for light/dark) */}
-      <div style={{ position: 'absolute', width: '500px', height: '500px', background: 'radial-gradient(circle, rgba(99,102,241,0.15) 0%, rgba(0,0,0,0) 70%)', top: '-10%', left: '-5%', pointerEvents: 'none' }}></div>
-      <div style={{ position: 'absolute', width: '500px', height: '500px', background: 'radial-gradient(circle, rgba(236,72,153,0.1) 0%, rgba(0,0,0,0) 70%)', bottom: '-10%', right: '-5%', pointerEvents: 'none' }}></div>
+      {/* 🔮 Backdrop Ambient Glow Visuals */}
+      <div style={{ position: 'absolute', width: '500px', height: '500px', background: 'radial-gradient(circle, rgba(99,102,241,0.12) 0%, rgba(0,0,0,0) 70%)', top: '-10%', left: '-5%', pointerEvents: 'none' }}></div>
+      <div style={{ position: 'absolute', width: '500px', height: '500px', background: 'radial-gradient(circle, rgba(236,72,153,0.08) 0%, rgba(0,0,0,0) 70%)', bottom: '-10%', right: '-5%', pointerEvents: 'none' }}></div>
 
-      {/* 💳 Sleek Flat Modern Card Hub */}
-      <div style={{
-        background: colors.cardBg, backdropFilter: 'blur(20px)', WebkitBackdropFilter: 'blur(20px)',
-        padding: '40px', borderRadius: '24px', 
-        border: `1px solid ${colors.border}`,
-        boxShadow: isDarkMode ? '0 25px 50px -12px rgba(0, 0, 0, 0.4)' : '0 25px 50px -12px rgba(15, 23, 42, 0.08)',
-        width: '100%', maxWidth: '450px', zIndex: 10, boxSizing: 'border-box',
-        transition: 'all 0.3s ease'
-      }}>
-        
-        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
-          <div style={{ background: 'linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)', padding: '14px', borderRadius: '16px', color: '#fff' }}>
-            <ShieldCheck size={30} />
-          </div>
-        </div>
-
-        <h2 style={{ textAlign: 'center', margin: '0 0 6px 0', color: colors.textMain, fontSize: '24px', fontWeight: '700', letterSpacing: '-0.5px' }}>HWOIP Workspace</h2>
-        <p style={{ textAlign: 'center', color: colors.textMuted, fontSize: '13px', margin: '0 0 32px 0', lineHeight: '1.4' }}>
-          Healthcare Workforce Operations Platform
-        </p>
-
-        {/* Dynamic Navigation Toggles (Minimal Flat Segmented Tab) */}
-        <div style={{ display: 'flex', background: isDarkMode ? '#0f172a' : '#f1f5f9', padding: '4px', borderRadius: '12px', gap: '4px', marginBottom: '32px' }}>
-          <button
-            type="button"
-            onClick={() => setViewMode('LOGIN')}
-            style={{
-              flex: 1, padding: '10px', cursor: 'pointer', border: 'none', borderRadius: '8px', fontWeight: '600', fontSize: '13px',
-              background: viewMode === 'LOGIN' ? colors.inputBg : 'transparent',
-              color: viewMode === 'LOGIN' ? colors.textMain : colors.textMuted,
-              boxShadow: viewMode === 'LOGIN' ? '0 2px 8px rgba(0,0,0,0.05)' : 'none',
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-              <LogIn size={14} /> Sign In
-            </div>
-          </button>
-          <button
-            type="button"
-            onClick={() => setViewMode('REGISTER')}
-            style={{
-              flex: 1, padding: '10px', cursor: 'pointer', border: 'none', borderRadius: '8px', fontWeight: '600', fontSize: '13px',
-              background: viewMode === 'REGISTER' ? colors.inputBg : 'transparent',
-              color: viewMode === 'REGISTER' ? colors.textMain : colors.textMuted,
-              boxShadow: viewMode === 'REGISTER' ? '0 2px 8px rgba(0,0,0,0.05)' : 'none',
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
-              <UserPlus size={14} /> Register
-            </div>
-          </button>
-        </div>
-
-        {viewMode === 'LOGIN' ? (
-          /* 🔒 CLEAN ACCESS GATEWAY FORM */
-          <form onSubmit={handleLoginSubmit}>
-            <div style={{ marginBottom: '20px', position: 'relative' }}>
-              <label style={{ display: 'block', marginBottom: '6px', fontSize: '11px', fontWeight: '600', color: colors.textMuted, letterSpacing: '0.5px' }}>SYSTEM IDENTIFIER</label>
-              <div style={{ position: 'relative' }}>
-                <User size={16} style={{ position: 'absolute', left: '14px', top: '14px', color: colors.textMuted }} />
-                <input
-                  type="text"
-                  value={loginUsername}
-                  onChange={(e) => setLoginUsername(e.target.value)}
-                  required
-                  placeholder="Username or email..."
-                  style={{ width: '100%', padding: '13px 14px 13px 42px', borderRadius: '10px', border: `1px solid ${colors.border}`, background: colors.inputBg, color: colors.textMain }}
-                />
+      {/* 💳 3D Flipped Card Wrapper Matrix */}
+      <div className="flip-card-container">
+        <div className={`flip-card-inner ${viewMode === 'REGISTER' ? 'flipped' : ''}`}>
+          
+          {/* 🚪 FRONT LAYER SIDE: SECURE SIGN IN GATEWAY */}
+          <div className="flip-card-front" style={{ ...cardStyle, position: viewMode === 'LOGIN' ? 'relative' : 'absolute', zIndex: viewMode === 'LOGIN' ? 2 : 1 }}>
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
+              <div style={{ background: 'linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)', padding: '14px', borderRadius: '16px', color: '#fff' }}>
+                <ShieldCheck size={30} />
               </div>
             </div>
 
-            <div style={{ marginBottom: '28px', position: 'relative' }}>
-              <label style={{ display: 'block', marginBottom: '6px', fontSize: '11px', fontWeight: '600', color: colors.textMuted, letterSpacing: '0.5px' }}>PASSWORD</label>
-              <div style={{ position: 'relative' }}>
-                <Lock size={16} style={{ position: 'absolute', left: '14px', top: '14px', color: colors.textMuted }} />
-                <input
-                  type={showPassword ? "text" : "password"}
-                  value={loginPassword}
-                  onChange={(e) => setLoginPassword(e.target.value)}
-                  required
-                  placeholder="••••••••"
-                  style={{ width: '100%', padding: '13px 42px 13px 42px', borderRadius: '10px', border: `1px solid ${colors.border}`, background: colors.inputBg, color: colors.textMain }}
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  style={{ position: 'absolute', right: '14px', top: '13px', background: 'none', border: 'none', color: colors.textMuted, cursor: 'pointer', padding: 0 }}
-                >
-                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                </button>
-              </div>
-            </div>
+            <h2 style={{ textAlign: 'center', margin: '0 0 6px 0', color: colors.textMain, fontSize: '24px', fontWeight: '700', letterSpacing: '-0.5px' }}>HWOIP Workspace</h2>
+            <p style={{ textAlign: 'center', color: colors.textMuted, fontSize: '13px', margin: '0 0 32px 0', lineHeight: '1.4' }}>
+              Healthcare Workforce Operations Platform
+            </p>
 
-            <button type="submit" style={{ width: '100%', padding: '14px', borderRadius: '10px', border: 'none', background: 'linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)', color: '#fff', fontWeight: '600', fontSize: '14px', cursor: 'pointer', boxShadow: '0 4px 12px rgba(99, 102, 241, 0.2)' }}>
-              Authorize & Access Role
-            </button>
-          </form>
-        ) : (
-          /* 📝 CANDIDATE PIPELINE SIGNUP COMPONENT */
-          <form onSubmit={handleRegisterSubmit}>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-              
-              <div>
-                <label style={{ display: 'block', marginBottom: '4px', fontSize: '11px', fontWeight: '600', color: colors.textMuted }}>FULL NAME</label>
-                <div style={{ position: 'relative' }}>
-                  <User size={15} style={{ position: 'absolute', left: '12px', top: '12px', color: colors.textMuted }} />
-                  <input type="text" value={regName} onChange={(e) => setRegName(e.target.value)} required style={{ width: '100%', padding: '11px 12px 11px 36px', borderRadius: '8px', border: `1px solid ${colors.border}`, background: colors.inputBg, color: colors.textMain }} />
+            {/* Navigation Tabs Controller */}
+            <div style={{ display: 'flex', background: isDarkMode ? '#0f172a' : '#f1f5f9', padding: '4px', borderRadius: '12px', gap: '4px', marginBottom: '32px' }}>
+              <button
+                type="button"
+                onClick={() => setViewMode('LOGIN')}
+                style={{
+                  flex: 1, padding: '10px', cursor: 'pointer', border: 'none', borderRadius: '8px', fontWeight: '600', fontSize: '13px',
+                  background: colors.inputBg, color: colors.textMain, boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                  <LogIn size={14} /> Sign In
                 </div>
-              </div>
-
-              <div>
-                <label style={{ display: 'block', marginBottom: '4px', fontSize: '11px', fontWeight: '600', color: colors.textMuted }}>CONTACT MOBILE</label>
-                <div style={{ position: 'relative' }}>
-                  <Phone size={15} style={{ position: 'absolute', left: '12px', top: '12px', color: colors.textMuted }} />
-                  <input type="number" value={regMobile} onChange={(e) => setRegMobile(e.target.value)} required style={{ width: '100%', padding: '11px 12px 11px 36px', borderRadius: '8px', border: `1px solid ${colors.border}`, background: colors.inputBg, color: colors.textMain }} />
+              </button>
+              <button
+                type="button"
+                onClick={() => setViewMode('REGISTER')}
+                style={{
+                  flex: 1, padding: '10px', cursor: 'pointer', border: 'none', borderRadius: '8px', fontWeight: '600', fontSize: '13px',
+                  background: 'transparent', color: colors.textMuted
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                  <UserPlus size={14} /> Register
                 </div>
-              </div>
-
-              <div>
-                <label style={{ display: 'block', marginBottom: '4px', fontSize: '11px', fontWeight: '600', color: colors.textMuted }}>SYSTEM USERNAME</label>
-                <div style={{ position: 'relative' }}>
-                  <User size={15} style={{ position: 'absolute', left: '12px', top: '12px', color: colors.textMuted }} />
-                  <input type="text" value={regUser} onChange={(e) => setRegUser(e.target.value)} required style={{ width: '100%', padding: '11px 12px 11px 36px', borderRadius: '8px', border: `1px solid ${colors.border}`, background: colors.inputBg, color: colors.textMain }} />
-                </div>
-              </div>
-
-              <div>
-                <label style={{ display: 'block', marginBottom: '4px', fontSize: '11px', fontWeight: '600', color: colors.textMuted }}>EMAIL CORRESPONDENCE</label>
-                <div style={{ position: 'relative' }}>
-                  <Mail size={15} style={{ position: 'absolute', left: '12px', top: '12px', color: colors.textMuted }} />
-                  <input type="email" value={regEmail} onChange={(e) => setRegEmail(e.target.value)} required style={{ width: '100%', padding: '11px 12px 11px 36px', borderRadius: '8px', border: `1px solid ${colors.border}`, background: colors.inputBg, color: colors.textMain }} />
-                </div>
-              </div>
-
-              <div style={{ marginBottom: '6px' }}>
-                <label style={{ display: 'block', marginBottom: '4px', fontSize: '11px', fontWeight: '600', color: colors.textMuted }}>PORTAL ACCESS PASSWORD</label>
-                <div style={{ position: 'relative' }}>
-                  <Lock size={15} style={{ position: 'absolute', left: '12px', top: '12px', color: colors.textMuted }} />
-                  <input type="password" value={regPass} onChange={(e) => setRegPass(e.target.value)} required style={{ width: '100%', padding: '11px 12px 11px 36px', borderRadius: '8px', border: `1px solid ${colors.border}`, background: colors.inputBg, color: colors.textMain }} />
-                </div>
-              </div>
-
-              <button type="submit" style={{ width: '100%', padding: '14px', borderRadius: '10px', border: 'none', background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)', color: '#fff', fontWeight: '600', fontSize: '14px', cursor: 'pointer', boxShadow: '0 4px 12px rgba(16, 185, 129, 0.2)' }}>
-                Initialize Candidate Profile
               </button>
             </div>
-          </form>
-        )}
+
+            <form onSubmit={handleLoginSubmit}>
+              <div style={{ marginBottom: '20px', position: 'relative' }}>
+                <label style={{ display: 'block', marginBottom: '6px', fontSize: '11px', fontWeight: '600', color: colors.textMuted, letterSpacing: '0.5px' }}>SYSTEM IDENTIFIER</label>
+                <div style={{ position: 'relative' }}>
+                  <User size={16} style={{ position: 'absolute', left: '14px', top: '14px', color: colors.textMuted }} />
+                  <input
+                    type="text"
+                    value={loginUsername}
+                    onChange={(e) => setLoginUsername(e.target.value)}
+                    required
+                    placeholder="Username or email..."
+                    style={{ width: '100%', padding: '13px 14px 13px 42px', borderRadius: '10px', border: `1px solid ${colors.border}`, background: colors.inputBg, color: colors.textMain }}
+                  />
+                </div>
+              </div>
+
+              <div style={{ marginBottom: '28px', position: 'relative' }}>
+                <label style={{ display: 'block', marginBottom: '6px', fontSize: '11px', fontWeight: '600', color: colors.textMuted, letterSpacing: '0.5px' }}>PASSWORD</label>
+                <div style={{ position: 'relative' }}>
+                  <Lock size={16} style={{ position: 'absolute', left: '14px', top: '14px', color: colors.textMuted }} />
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    value={loginPassword}
+                    onChange={(e) => setLoginPassword(e.target.value)}
+                    required
+                    placeholder="••••••••"
+                    style={{ width: '100%', padding: '13px 42px 13px 42px', borderRadius: '10px', border: `1px solid ${colors.border}`, background: colors.inputBg, color: colors.textMain }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    style={{ position: 'absolute', right: '14px', top: '13px', background: 'none', border: 'none', color: colors.textMuted, cursor: 'pointer', padding: 0 }}
+                  >
+                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                  </button>
+                </div>
+              </div>
+
+              <button type="submit" style={{ width: '100%', padding: '14px', borderRadius: '10px', border: 'none', background: 'linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)', color: '#fff', fontWeight: '600', fontSize: '14px', cursor: 'pointer', boxShadow: '0 4px 12px rgba(99, 102, 241, 0.2)' }}>
+                Authorize & Access Role
+              </button>
+            </form>
+          </div>
+
+          {/* 📝 BACK LAYER SIDE: CANDIDATE PIPELINE SIGNUP */}
+          <div className="flip-card-back" style={{ ...cardStyle, position: viewMode === 'REGISTER' ? 'relative' : 'absolute', zIndex: viewMode === 'REGISTER' ? 2 : 1 }}>
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
+              <div style={{ background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)', padding: '14px', borderRadius: '16px', color: '#fff' }}>
+                <UserPlus size={30} />
+              </div>
+            </div>
+
+            <h2 style={{ textAlign: 'center', margin: '0 0 6px 0', color: colors.textMain, fontSize: '24px', fontWeight: '700', letterSpacing: '-0.5px' }}>Join Platform</h2>
+            <p style={{ textAlign: 'center', color: colors.textMuted, fontSize: '13px', margin: '0 0 32px 0', lineHeight: '1.4' }}>
+              Create your intelligence portal node interface
+            </p>
+
+            {/* Navigation Tabs Controller */}
+            <div style={{ display: 'flex', background: isDarkMode ? '#0f172a' : '#f1f5f9', padding: '4px', borderRadius: '12px', gap: '4px', marginBottom: '32px' }}>
+              <button
+                type="button"
+                onClick={() => setViewMode('LOGIN')}
+                style={{
+                  flex: 1, padding: '10px', cursor: 'pointer', border: 'none', borderRadius: '8px', fontWeight: '600', fontSize: '13px',
+                  background: 'transparent', color: colors.textMuted
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                  <LogIn size={14} /> Sign In
+                </div>
+              </button>
+              <button
+                type="button"
+                onClick={() => setViewMode('REGISTER')}
+                style={{
+                  flex: 1, padding: '10px', cursor: 'pointer', border: 'none', borderRadius: '8px', fontWeight: '600', fontSize: '13px',
+                  background: colors.inputBg, color: colors.textMain, boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px' }}>
+                  <UserPlus size={14} /> Register
+                </div>
+              </button>
+            </div>
+
+            <form onSubmit={handleRegisterSubmit}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                <div>
+                  <label style={{ display: 'block', marginBottom: '4px', fontSize: '11px', fontWeight: '600', color: colors.textMuted }}>FULL NAME</label>
+                  <div style={{ position: 'relative' }}>
+                    <User size={15} style={{ position: 'absolute', left: '12px', top: '12px', color: colors.textMuted }} />
+                    <input type="text" value={regName} onChange={(e) => setRegName(e.target.value)} required style={{ padding: '11px 12px 11px 36px', borderRadius: '8px', border: `1px solid ${colors.border}`, background: colors.inputBg, color: colors.textMain }} />
+                  </div>
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', marginBottom: '4px', fontSize: '11px', fontWeight: '600', color: colors.textMuted }}>CONTACT MOBILE</label>
+                  <div style={{ position: 'relative' }}>
+                    <Phone size={15} style={{ position: 'absolute', left: '12px', top: '12px', color: colors.textMuted }} />
+                    <input type="text" value={regMobile} onChange={(e) => setRegMobile(e.target.value)} required style={{ padding: '11px 12px 11px 36px', borderRadius: '8px', border: `1px solid ${colors.border}`, background: colors.inputBg, color: colors.textMain }} />
+                  </div>
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', marginBottom: '4px', fontSize: '11px', fontWeight: '600', color: colors.textMuted }}>SYSTEM USERNAME</label>
+                  <div style={{ position: 'relative' }}>
+                    <User size={15} style={{ position: 'absolute', left: '12px', top: '12px', color: colors.textMuted }} />
+                    <input type="text" value={regUser} onChange={(e) => setRegUser(e.target.value)} required style={{ padding: '11px 12px 11px 36px', borderRadius: '8px', border: `1px solid ${colors.border}`, background: colors.inputBg, color: colors.textMain }} />
+                  </div>
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', marginBottom: '4px', fontSize: '11px', fontWeight: '600', color: colors.textMuted }}>EMAIL CORRESPONDENCE</label>
+                  <div style={{ position: 'relative' }}>
+                    <Mail size={15} style={{ position: 'absolute', left: '12px', top: '12px', color: colors.textMuted }} />
+                    <input type="email" value={regEmail} onChange={(e) => setRegEmail(e.target.value)} required style={{ padding: '11px 12px 11px 36px', borderRadius: '8px', border: `1px solid ${colors.border}`, background: colors.inputBg, color: colors.textMain }} />
+                  </div>
+                </div>
+
+                <div style={{ marginBottom: '6px' }}>
+                  <label style={{ display: 'block', marginBottom: '4px', fontSize: '11px', fontWeight: '600', color: colors.textMuted }}>PORTAL ACCESS PASSWORD</label>
+                  <div style={{ position: 'relative' }}>
+                    <Lock size={15} style={{ position: 'absolute', left: '12px', top: '12px', color: colors.textMuted }} />
+                    <input type="password" value={regPass} onChange={(e) => setRegPass(e.target.value)} required style={{ padding: '11px 12px 11px 36px', borderRadius: '8px', border: `1px solid ${colors.border}`, background: colors.inputBg, color: colors.textMain }} />
+                  </div>
+                </div>
+
+                <button type="submit" style={{ width: '100%', padding: '14px', borderRadius: '10px', border: 'none', background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)', color: '#fff', fontWeight: '600', fontSize: '14px', cursor: 'pointer', boxShadow: '0 4px 12px rgba(16, 185, 129, 0.2)' }}>
+                  Initialize Candidate Profile
+                </button>
+              </div>
+            </form>
+          </div>
+
+        </div>
       </div>
     </div>
   );

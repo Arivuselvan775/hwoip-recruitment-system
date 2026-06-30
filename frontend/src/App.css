@@ -12,7 +12,41 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Smooth Interactive Styling */
+/* 3D Card Flip Core Engine Setup */
+.flip-card-container {
+  perspective: 1200px;
+  width: 100%;
+  max-width: 450px;
+  z-index: 10;
+}
+
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Active State dynamic triggers */
+.flipped {
+  transform: rotateY(180deg);
+}
+
+.flip-card-front, .flip-card-back {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+.flip-card-back {
+  transform: rotateY(180deg);
+  position: relative; /* Height auto adjust aahurathuku handle panrom */
+}
+
+/* Form Components Base Setup */
 input {
   width: 100%;
   box-sizing: border-box;
@@ -33,16 +67,9 @@ button:active {
   transform: scale(0.98);
 }
 
-/* Core Toast Slide-In Animation */
 @keyframes slideIn {
-  0% {
-    transform: translateX(120%) scale(0.95);
-    opacity: 0;
-  }
-  100% {
-    transform: translateX(0) scale(1);
-    opacity: 1;
-  }
+  0% { transform: translateX(120%) scale(0.95); opacity: 0; }
+  100% { transform: translateX(0) scale(1); opacity: 1; }
 }
 /* Chrome, Safari, Edge, Opera-la ulla arrows-ah maraika */
 input::-webkit-outer-spin-button,
