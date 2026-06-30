@@ -90,20 +90,7 @@ export default function AuthPage() {
       transition: 'background-color 0.3s ease'
     }}>
       
-      {/* 🌓 Floating Theme Changer Button */}
-      <button 
-        type="button"
-        onClick={() => setIsDarkMode(!isDarkMode)}
-        style={{
-          position: 'absolute', top: '24px', right: '24px',
-          background: colors.cardBg, border: `1px solid ${colors.border}`,
-          padding: '12px', borderRadius: '50%', cursor: 'pointer', zIndex: 100,
-          display: 'flex', alignItems: 'center', justifyContent: 'center',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.05)', color: colors.textMain
-        }}
-      >
-        {isDarkMode ? <Sun size={20} style={{ color: '#fbbf24' }} /> : <Moon size={20} style={{ color: '#6366f1' }} />}
-      </button>
+    
 
       {/* 🔔 Slide-in Custom Toast System Notifications */}
       {toast.show && (
