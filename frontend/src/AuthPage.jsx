@@ -6,22 +6,22 @@ import './App.css';
 const API_BASE_URL = "http://127.0.0.1:8000/api/auth";
 
 export default function AuthPage() {
-  const [viewMode, setViewMode] = useState('LOGIN'); // 'LOGIN' or 'REGISTER'
+  const [viewMode, setViewMode] = useState('LOGIN'); // Toggle between login and registration views
   const [showPassword, setShowPassword] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
 
-  // 1. Pure Blank Login States 
+  // Login form state values
   const [loginUsername, setLoginUsername] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
 
-  // 2. Candidate Signup States
+  // Registration form state values
   const [regUser, setRegUser] = useState('');
   const [regEmail, setRegEmail] = useState('');
   const [regPass, setRegPass] = useState('');
   const [regName, setRegName] = useState('');
   const [regMobile, setRegMobile] = useState('');
 
-  // 3. System Dynamic Notification Toasts State
+  // Notification toast state
   const [toast, setToast] = useState({ show: false, message: '', type: '' });
 
   const triggerToast = (message, type = 'success') => {
@@ -29,7 +29,7 @@ export default function AuthPage() {
     setTimeout(() => setToast({ show: false, message: '', type: '' }), 4500);
   };
 
-  // 🚪 AUTOMATIC ROLE-DETECTING LOGIN LOGIC
+  // Handles user authentication and role detection
   const handleLoginSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -49,7 +49,7 @@ export default function AuthPage() {
     }
   };
 
-  // 📝 STRICT CANDIDATE REGISTRATION HANDLER
+  // Handles candidate registration
   const handleRegisterSubmit = async (e) => {
     e.preventDefault();
     try {
@@ -71,7 +71,7 @@ export default function AuthPage() {
     }
   };
 
-  // 🎨 Dynamic Colors Based on Theme State
+  // Theme-based color definitions
   const colors = {
     bg: isDarkMode ? '#0f172a' : '#f8fafc',
     cardBg: isDarkMode ? 'rgba(30, 41, 59, 0.9)' : 'rgba(255, 255, 255, 0.95)',
@@ -98,7 +98,7 @@ export default function AuthPage() {
       
     
 
-      {/* 🔔 Slide-in Custom Toast System Notifications */}
+      {/* Toast notification container */}
       {toast.show && (
         <div style={{
           position: 'fixed', top: '25px', right: '25px',
@@ -116,15 +116,15 @@ export default function AuthPage() {
         </div>
       )}
 
-      {/* 🔮 Backdrop Ambient Glow Visuals */}
+      {/* Ambient background glow effects */}
       <div style={{ position: 'absolute', width: '500px', height: '500px', background: 'radial-gradient(circle, rgba(99,102,241,0.12) 0%, rgba(0,0,0,0) 70%)', top: '-10%', left: '-5%', pointerEvents: 'none' }}></div>
       <div style={{ position: 'absolute', width: '500px', height: '500px', background: 'radial-gradient(circle, rgba(236,72,153,0.08) 0%, rgba(0,0,0,0) 70%)', bottom: '-10%', right: '-5%', pointerEvents: 'none' }}></div>
 
-      {/* 💳 3D Flipped Card Wrapper Matrix */}
+      {/* Animated authentication card container */}
       <div className="flip-card-container">
         <div className={`flip-card-inner ${viewMode === 'REGISTER' ? 'flipped' : ''}`}>
           
-          {/* 🚪 FRONT LAYER SIDE: SECURE SIGN IN GATEWAY */}
+          {/* Login form panel */}
           <div className="flip-card-front" style={{ ...cardStyle, position: viewMode === 'LOGIN' ? 'relative' : 'absolute', zIndex: viewMode === 'LOGIN' ? 2 : 1 }}>
             <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
               <div style={{ background: 'linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)', padding: '14px', borderRadius: '16px', color: '#fff' }}>
@@ -201,7 +201,7 @@ export default function AuthPage() {
       onClick={() => setShowPassword(!showPassword)}
       style={{ position: 'absolute', right: '12px', top: '10px', background: 'none', border: 'none', cursor: 'pointer', padding: 0, display: 'flex', alignItems: 'center' }}
     >
-      {/* 👁️ Use <SharinganIcon /> here if you want the anime look or stick to standard icons below */}
+      {/* Uses the standard eye icon for password visibility toggling */}
       {showPassword ? <EyeOff size={16} style={{ color: colors.textMuted }} /> : <Eye size={16} style={{ color: colors.textMuted }} />}
     </button>
 
@@ -214,7 +214,7 @@ export default function AuthPage() {
             </form>
           </div>
 
-          {/* 📝 BACK LAYER SIDE: CANDIDATE PIPELINE SIGNUP */}
+          {/* Registration form panel */}
           <div className="flip-card-back" style={{ ...cardStyle, position: viewMode === 'REGISTER' ? 'relative' : 'absolute', zIndex: viewMode === 'REGISTER' ? 2 : 1 }}>
             <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px' }}>
               <div style={{ background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)', padding: '14px', borderRadius: '16px', color: '#fff' }}>
