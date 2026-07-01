@@ -83,7 +83,7 @@ def register_candidate(data: CandidateRegisterSchema, conn=Depends(get_db)):
         conn.rollback()
         raise HTTPException(status_code=500, detail=str(e))
 
-# 2. LOGIN API (UPDATED FOR EXACT STRING MATCHING)
+# 2. LOGIN API (UPDATED FOR PROFESSIONAL ENGLISH NOTIFICATIONS)
 @app.post("/api/auth/login")
 def login(data: LoginSchema, conn=Depends(get_db)):
     cursor = conn.cursor()
@@ -100,16 +100,17 @@ def login(data: LoginSchema, conn=Depends(get_db)):
     )
     user = cursor.fetchone()
 
-    # Checking if user exists in the database
+    # 1. FIXED: Professional User Check Notification
     if not user:
-        raise HTTPException(status_code=401, detail="🚨 Account text check failed: User template found illai!")
+        raise HTTPException(status_code=401, detail="Authentication failed: User account not found.")
 
     # Strip function uses space alignments handling to prevent copy-paste spaces
     db_password = str(user['password_hash']).strip()
     input_password = str(data.password).strip()
 
+    # 2. FIXED: Professional Password Mismatch Notification
     if db_password != input_password:
-        raise HTTPException(status_code=401, detail="🚨 Password Mismatch: Database hash match aagala!")
+        raise HTTPException(status_code=401, detail="Authentication failed: Invalid password credentials.")
 
     return {
         "status": "success",
