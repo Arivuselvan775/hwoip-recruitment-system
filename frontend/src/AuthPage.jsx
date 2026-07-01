@@ -120,17 +120,15 @@ const AuthPage = ({ jobs, onApplyClick, authForm, onAuthChange, onSignIn, authEr
             <p style={{ margin: 0, color: 'rgba(255,255,255,0.9)', fontSize: '0.85rem' }}>Access your account</p>
           </div>
 
-          {authError && (
+          {authError ? (
             <div style={{ backgroundColor: 'rgba(255,255,255,0.15)', border: '1px solid rgba(255,255,255,0.3)', color: '#fff', padding: '10px 12px', borderRadius: '6px', marginBottom: '12px', fontSize: '0.8rem', backdropFilter: 'blur(10px)' }}>
               ⚠️ {authError}
             </div>
-          )}
-
-          {successMessage && (
+          ) : successMessage ? (
             <div style={{ backgroundColor: 'rgba(16, 185, 129, 0.2)', border: '1px solid rgba(16, 185, 129, 0.5)', color: '#d1fae5', padding: '10px 12px', borderRadius: '6px', marginBottom: '12px', fontSize: '0.8rem' }}>
               ✓ {successMessage}
             </div>
-          )}
+          ) : null}
 
           <form onSubmit={onSignIn} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             <div>

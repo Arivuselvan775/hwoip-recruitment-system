@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import AuthPage from './AuthPage';
 import ApplicationForm from './ApplicationForm';
 import CandidateDashboard from './CandidateDashboard';
 
-const jobs = [
+const fallbackJobs = [
   { id: 1, title: 'React Developer', dept: 'Frontend', exp: '2+ Years', salary: '6-10 LPA', location: 'Remote', type: 'Remote', skills: 'React, JavaScript', jd: 'Build scalable user interfaces for healthcare workforce products and collaborate with design and backend teams.' },
   { id: 2, title: 'FastAPI Backend', dept: 'Backend', exp: '3+ Years', salary: '8-12 LPA', location: 'Hybrid', type: 'Hybrid', skills: 'Python, FastAPI', jd: 'Design REST APIs and data models for recruitment workflows, integrations, and reporting.' }
 ];
@@ -24,11 +24,30 @@ const roleOptions = [
 function App() {
   const [view, setView] = useState('auth');
   const [selectedJob, setSelectedJob] = useState(null);
+  const [jobs, setJobs] = useState(fallbackJobs);
   const [authForm, setAuthForm] = useState({ usernameOrEmail: '', password: '', role: 'DELIVERY_HEAD' });
   const [authError, setAuthError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [appliedJobs, setAppliedJobs] = useState([]);
   const [candidateUser, setCandidateUser] = useState(null);
+
+  const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000';
+
+  useEffect(() => {
+    const loadJobs = async () => {
+      try {
+        const response = await axios.get(`${apiBaseUrl}/api/jobs`);
+        const payloadJobs = response.data?.jobs || [];
+        if (payloadJobs.length > 0) {
+          setJobs(payloadJobs);
+        }
+      } catch {
+        setJobs(fallbackJobs);
+      }
+    };
+
+    loadJobs();
+  }, [apiBaseUrl]);
 
   const handleApplyClick = (job) => {
     setSelectedJob(job);
@@ -45,9 +64,10 @@ function App() {
   const handleSignIn = async (event) => {
     event.preventDefault();
     setAuthError('');
+    setSuccessMessage('');
 
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/auth/login', {
+      const response = await axios.post(`${apiBaseUrl}/api/auth/login`, {
         username_or_email: authForm.usernameOrEmail,
         password: authForm.password
       });
@@ -65,12 +85,13 @@ function App() {
       }
     } catch (error) {
       setAuthError(error.response?.data?.detail || 'Sign in failed.');
+      setSuccessMessage('');
     }
   };
 
   const handleApplicationSubmit = async (payload) => {
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/applications/submit', {
+      const response = await axios.post(`${apiBaseUrl}/api/applications/submit`, {
         ...payload,
         jobTitle: selectedJob.title,
         department: selectedJob.dept,
