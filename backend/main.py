@@ -16,7 +16,7 @@ app.add_middleware(
 )
 
 # இந்த வரியில எக்ஸ்ட்ரா ஸ்பேஸ் இல்லாம நேரா இருக்கான்னு பாருங்க
-SQLALCHEMY_DATABASE_URL = "postgresql://postgres:.2589630147894@db.piuhurxlsbegvozbciix.supabase.co:5432/postgres"
+SQLALCHEMY_DATABASE_URL = "postgresql://postgres.piuhurxlsbegvozbciix:.2589630147894@aws-1-ap-south-1.pooler.supabase.com:6543/postgres"
 
 def get_db():
     try:
