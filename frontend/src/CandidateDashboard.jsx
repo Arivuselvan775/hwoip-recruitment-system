@@ -1,4 +1,5 @@
 import React from 'react';
+<<<<<<< HEAD
 import { Briefcase, Clock, CheckCircle2, User, LogOut, Layout } from 'lucide-react';
 
 export default function CandidateDashboard({ user, onLogout }) {
@@ -95,3 +96,45 @@ export default function CandidateDashboard({ user, onLogout }) {
     </div>
   );
 }
+=======
+
+const CandidateDashboard = ({ candidateUser, appliedJobs, ongoingJobs }) => {
+  return (
+    <div style={{ display: 'flex', minHeight: '100vh', padding: '24px', gap: '24px', fontFamily: 'Arial, sans-serif' }}>
+      <div style={{ flex: 1, backgroundColor: '#f8fafc', padding: '20px', borderRadius: '10px' }}>
+        <h2 style={{ marginTop: 0 }}>Welcome, {candidateUser?.username || 'Candidate'}</h2>
+        <h3>Applied Jobs</h3>
+        {appliedJobs.length > 0 ? (
+          <ul>
+            {appliedJobs.map((job) => (
+              <li key={job.id} style={{ marginBottom: '8px' }}>
+                {job.title} - <strong>{job.status || 'Applied'}</strong>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>No applications yet.</p>
+        )}
+
+        <h3>Ongoing Jobs</h3>
+        <ul>
+          {ongoingJobs.map((job) => (
+            <li key={job.id} style={{ marginBottom: '8px' }}>{job.title}</li>
+          ))}
+        </ul>
+      </div>
+
+      <div style={{ flex: 1, backgroundColor: '#fff', padding: '20px', borderRadius: '10px', border: '1px solid #e5e7eb' }}>
+        <h3>Application Status Timeline</h3>
+        <div style={{ borderLeft: '3px solid #2563eb', paddingLeft: '12px' }}>
+          <p>Applied ✅</p>
+          <p>Under Review ⏳</p>
+          <p>Interview Scheduled 📅</p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default CandidateDashboard;
+>>>>>>> d6a61e4 (17:49)
