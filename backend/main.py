@@ -484,6 +484,17 @@ def login(data: LoginSchema, conn=Depends(get_db)):
 
 @app.post("/api/applications/submit")
 def submit_application(data: ApplicationSubmissionSchema, conn=Depends(get_db)):
+    # Validate slots
+    if len(data.slots) < 3 or len(data.slots) > 10:
+        raise HTTPException(status_code=400, detail=f"Must provide between 3 and 10 availability slots. Provided: {len(data.slots)}")
+    
+    # Validate each slot has valid time range
+    for i, slot in enumerate(data.slots):
+        if not slot.date or not slot.startTime or not slot.endTime:
+            raise HTTPException(status_code=400, detail=f"Slot {i+1}: All fields (date, start time, end time) are required.")
+        if slot.startTime >= slot.endTime:
+            raise HTTPException(status_code=400, detail=f"Slot {i+1}: End time must be after start time.")
+    
     cursor = conn.cursor()
     try:
         username_base = str(data.email).split("@", 1)[0].replace(".", "_")

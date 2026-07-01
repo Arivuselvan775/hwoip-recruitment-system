@@ -73,6 +73,20 @@ const ApplicationForm = ({ job, onClose, onSubmit }) => {
       return;
     }
 
+    // Validate that all slots have date and time information
+    for (let i = 0; i < slots.length; i++) {
+      const slot = slots[i];
+      if (!slot.date || !slot.startTime || !slot.endTime) {
+        setFormError(`Slot ${i + 1} is incomplete. Please fill in date, start time, and end time.`);
+        return;
+      }
+      // Validate that end time is after start time
+      if (slot.startTime >= slot.endTime) {
+        setFormError(`Slot ${i + 1}: End time must be after start time on the same day.`);
+        return;
+      }
+    }
+
     if (formData.password !== formData.confirmPassword) {
       setFormError('Passwords do not match.');
       return;
