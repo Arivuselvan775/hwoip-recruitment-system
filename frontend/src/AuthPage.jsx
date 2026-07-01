@@ -264,14 +264,26 @@ export default function AuthPage() {
                     <input type="text" value={regName} onChange={(e) => setRegName(e.target.value)} required placeholder="e.g. John Doe" style={{ padding: '11px 12px 11px 36px', borderRadius: '8px', border: `1px solid ${colors.border}`, background: colors.inputBg, color: colors.textMain }} />
                   </div>
                 </div>
-
-                <div>
-                  <label style={{ display: 'block', marginBottom: '4px', fontSize: '11px', fontWeight: '600', color: colors.textMuted }}>CONTACT MOBILE</label>
-                  <div style={{ position: 'relative' }}>
-                    <Phone size={15} style={{ position: 'absolute', left: '12px', top: '12px', color: colors.textMuted }} />
-                    <input type="text" value={regMobile} onChange={(e) => setRegMobile(e.target.value)} required placeholder="e.g. +91 9876543210" style={{ padding: '11px 12px 11px 36px', borderRadius: '8px', border: `1px solid ${colors.border}`, background: colors.inputBg, color: colors.textMain }} />
-                  </div>
-                </div>
+<div>
+  <label style={{ display: 'block', marginBottom: '4px', fontSize: '11px', fontWeight: '600', color: colors.textMuted }}>CONTACT MOBILE</label>
+  <div style={{ position: 'relative' }}>
+    <Phone size={15} style={{ position: 'absolute', left: '12px', top: '12px', color: colors.textMuted }} />
+    <input 
+      type="text" 
+      value={regMobile} 
+      onChange={(e) => {
+        const val = e.target.value;
+        // 💡 ONLY ALLOW DIGITS: Letter or spaces logic matrix-ah block panrom
+        if (val === '' || /^[0-9\b]+$/.test(val)) {
+          setRegMobile(val);
+        }
+      }} 
+      required 
+      placeholder="e.g. 9876543210" 
+      style={{ padding: '11px 12px 11px 36px', borderRadius: '8px', border: `1px solid ${colors.border}`, background: colors.inputBg, color: colors.textMain }} 
+    />
+  </div>
+</div>
 
                 <div>
                   <label style={{ display: 'block', marginBottom: '4px', fontSize: '11px', fontWeight: '600', color: colors.textMuted }}>SYSTEM USERNAME</label>
