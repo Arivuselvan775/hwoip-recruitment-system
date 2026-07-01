@@ -55,6 +55,6 @@ const CandidateDashboard = ({ candidateUser, appliedJobs, ongoingJobs }) => {
       </div>
     </div>
   );
-};
+}
 
 export default CandidateDashboard;
