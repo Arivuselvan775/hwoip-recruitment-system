@@ -1,4 +1,4 @@
-/* Global Reset & Box Model */
+/* Reset default browser styles */
 * {
   margin: 0;
   padding: 0;
@@ -12,7 +12,7 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* 3D Card Flip Core Engine Setup */
+/* Card flip animation styles */
 .flip-card-container {
   perspective: 1200px;
   width: 100%;
@@ -27,7 +27,7 @@ body {
   transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Active State dynamic triggers */
+/* Active state transition styles */
 .flipped {
   transform: rotateY(180deg);
 }
@@ -46,7 +46,7 @@ body {
   position: relative; /* Height auto adjust aahurathuku handle panrom */
 }
 
-/* Form Components Base Setup */
+/* Shared form control styles */
 input {
   width: 100%;
   box-sizing: border-box;
@@ -71,14 +71,14 @@ button:active {
   0% { transform: translateX(120%) scale(0.95); opacity: 0; }
   100% { transform: translateX(0) scale(1); opacity: 1; }
 }
-/* Chrome, Safari, Edge, Opera-la ulla arrows-ah maraika */
+/* Hide number input spinners in WebKit-based browsers */
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
 
-/* Firefox-la ulla arrows-ah maraika */
+/* Hide number input spinners in Firefox */
 input[type=number] {
   -moz-appearance: textfield;
 }

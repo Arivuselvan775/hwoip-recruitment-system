@@ -6,7 +6,7 @@ from psycopg2.extras import RealDictCursor
 
 app = FastAPI(title="HWOIP - Recruitment & Selection Platform")
 
-# Enable CORS so Navani's React app can access this backend safely
+# Enable CORS to allow the React frontend to access the backend securely.
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"], 
@@ -27,7 +27,7 @@ def get_db():
     finally:
         conn.close()
 
-# Pydantic Schemas for Request Validation
+# Pydantic schemas for request validation.
 class CandidateRegisterSchema(BaseModel):
     username: str
     email: EmailStr
@@ -39,22 +39,22 @@ class LoginSchema(BaseModel):
     username_or_email: str
     password: str
 
-    # Intha simple GET route ah add pannunga
+    # Define a simple health check endpoint.
 @app.get("/")
 def read_root():
     return {"status": "Online", "message": "Welcome to HWOIP Recruitment API Setup!"}
 
-# 1. CANDIDATE REGISTRATION ENDPOINT
+# Candidate registration endpoint.
 @app.post("/api/auth/register")
 def register_candidate(data: CandidateRegisterSchema, conn=Depends(get_db)):
     cursor = conn.cursor()
     try:
-        # Enforce that registration defaults solely to the CANDIDATE role
+        # Ensure new registrations default to the candidate role.
         cursor.execute("SELECT id FROM roles WHERE role_name = 'CANDIDATE';")
         role_res = cursor.fetchone()
         candidate_role_id = role_res['id']
 
-        # Insert User credentials into the core Auth table
+        # Insert user credentials into the authentication table.
         cursor.execute(
             """
             INSERT INTO users (username, email, password_hash, role_id)
@@ -64,7 +64,7 @@ def register_candidate(data: CandidateRegisterSchema, conn=Depends(get_db)):
         )
         user_id = cursor.fetchone()['id']
 
-        # Construct matching profile entry within the candidate domain space
+        # Create the corresponding candidate profile record.
         cursor.execute(
             """
             INSERT INTO candidate_profiles (id, full_name, mobile_number, current_status)
@@ -83,12 +83,12 @@ def register_candidate(data: CandidateRegisterSchema, conn=Depends(get_db)):
         conn.rollback()
         raise HTTPException(status_code=500, detail=str(e))
 
-# 2. LOGIN API (UPDATED FOR PROFESSIONAL ENGLISH NOTIFICATIONS)
+# Login endpoint.
 @app.post("/api/auth/login")
 def login(data: LoginSchema, conn=Depends(get_db)):
     cursor = conn.cursor()
     
-    # Selecting the corresponding matching user profile entries
+    # Retrieve the matching user record from the database.
     cursor.execute(
         """
         SELECT u.id, u.username, u.email, u.password_hash, r.role_name 
@@ -100,15 +100,15 @@ def login(data: LoginSchema, conn=Depends(get_db)):
     )
     user = cursor.fetchone()
 
-    # 1. FIXED: Professional User Check Notification
+    # Return a clear error when no matching account is found.
     if not user:
         raise HTTPException(status_code=401, detail="Authentication failed: User account not found.")
 
-    # Strip function uses space alignments handling to prevent copy-paste spaces
+    # Trim whitespace from submitted credentials before comparison.
     db_password = str(user['password_hash']).strip()
     input_password = str(data.password).strip()
 
-    # 2. FIXED: Professional Password Mismatch Notification
+    # Return a clear error when the password is invalid.
     if db_password != input_password:
         raise HTTPException(status_code=401, detail="Authentication failed: Invalid password credentials.")
 
