@@ -1,4 +1,6 @@
-/* Reset default browser styles */
+/* ==========================================================================
+   1. GLOBAL RESET & BASE STYLES
+   ========================================================================== */
 * {
   margin: 0;
   padding: 0;
@@ -12,7 +14,9 @@ body {
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Card flip animation styles */
+/* ==========================================================================
+   2. 3D CARD FLIP ANIMATION ENGINE
+   ========================================================================== */
 .flip-card-container {
   perspective: 1200px;
   width: 100%;
@@ -27,7 +31,7 @@ body {
   transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Active state transition styles */
+/* Active State Trigger */
 .flipped {
   transform: rotateY(180deg);
 }
@@ -43,10 +47,12 @@ body {
 
 .flip-card-back {
   transform: rotateY(180deg);
-  position: relative; /* Height auto adjust aahurathuku handle panrom */
+  position: relative; /* Height auto-adjustment handle */
 }
 
-/* Shared form control styles */
+/* ==========================================================================
+   3. CORE FORM & INTERACTIVE COMPONENTS
+   ========================================================================== */
 input {
   width: 100%;
   box-sizing: border-box;
@@ -67,18 +73,44 @@ button:active {
   transform: scale(0.98);
 }
 
-@keyframes slideIn {
-  0% { transform: translateX(120%) scale(0.95); opacity: 0; }
-  100% { transform: translateX(0) scale(1); opacity: 1; }
+/* ==========================================================================
+   4. BROWSER OVERLAY & DUPED EYE ICON SUPPRESSION
+   ========================================================================== */
+
+input::-webkit-contacts-auto-fill-button,
+input::-webkit-credentials-auto-fill-button,
+input::-webkit-caps-lock-indicator {
+  display: none !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
 }
-/* Hide number input spinners in WebKit-based browsers */
+
+
+input::-ms-reveal,
+input::-ms-clear {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
 
-/* Hide number input spinners in Firefox */
+
 input[type=number] {
   -moz-appearance: textfield;
+}
+
+/* ==========================================================================
+   5. KEYFRAMES & UTILITIES
+   ========================================================================== */
+@keyframes slideIn {
+  0% { transform: translateX(120%) scale(0.95); opacity: 0; }
+  100% { transform: translateX(0) scale(1); opacity: 1; }
 }
