@@ -1,5 +1,5 @@
 import React from 'react';
-<<<<<<< HEAD
+
 import { Briefcase, Clock, CheckCircle2, User, LogOut, Layout } from 'lucide-react';
 
 export default function CandidateDashboard({ user, onLogout }) {
@@ -96,7 +96,7 @@ export default function CandidateDashboard({ user, onLogout }) {
     </div>
   );
 }
-=======
+
 
 const CandidateDashboard = ({ candidateUser, appliedJobs, ongoingJobs }) => {
   return (
@@ -137,4 +137,3 @@ const CandidateDashboard = ({ candidateUser, appliedJobs, ongoingJobs }) => {
 };
 
 export default CandidateDashboard;
->>>>>>> d6a61e4 (17:49)
