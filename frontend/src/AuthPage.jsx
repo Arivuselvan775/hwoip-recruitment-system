@@ -68,10 +68,10 @@ export default function AuthPage() {
             <span style={{ fontSize: '14px', fontWeight: '800', tracking: '1px', textTransform: 'uppercase', color: '#64748b' }}>Service Hub</span>
           </div>
           <h1 style={{ fontSize: '36px', fontWeight: '900', color: '#0f172a', margin: 0, letterSpacing: '-1px' }}>
-            Navaneethan Dev Studio
+            CarePulse Ops
           </h1>
           <p style={{ fontSize: '15px', color: '#475569', marginTop: '12px', lineHeight: '1.6', maxWidth: '650px' }}>
-            Welcome to our professional portfolio and application development portal. We engineer production-grade websites, full-stack architectures, and high-performance automated software solutions. Explore active career slots below and submit your profile setup.
+          "Next-Generation Healthcare Workforce Logistics & Recruitment Intelligence Platform."
           </p>
         </div>
 
