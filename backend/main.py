@@ -15,7 +15,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# இந்த வரியில எக்ஸ்ட்ரா ஸ்பேஸ் இல்லாம நேரா இருக்கான்னு பாருங்க
 SQLALCHEMY_DATABASE_URL = "postgresql://postgres.piuhurxlsbegvozbciix:.2589630147894@aws-1-ap-south-1.pooler.supabase.com:6543/postgres"
 
 def get_db():
@@ -105,7 +104,6 @@ def login(data: LoginSchema, conn=Depends(get_db)):
     if not user:
         raise HTTPException(status_code=401, detail="🚨 Account text check failed: User template found illai!")
 
-    # Exact Plain-text password check alignment for Day 1
     # Strip function uses space alignments handling to prevent copy-paste spaces
     db_password = str(user['password_hash']).strip()
     input_password = str(data.password).strip()
