@@ -334,7 +334,7 @@ def list_jobs(conn=Depends(get_db)) -> dict:
     cursor = conn.cursor()
     cursor.execute(
         """
-        SELECT j.id, j.title, COALESCE(d.department_name, j.department_name) AS dept,
+        SELECT j.id, j.title, COALESCE(d.department_name, 'General') AS dept,
                j.location, j.employment_type AS job_type,
                j.experience_required AS exp, j.salary_min, j.salary_max,
                j.skills_required AS skills, j.job_description AS jd
@@ -652,4 +652,4 @@ def submit_application(data: ApplicationSubmissionSchema, conn=Depends(get_db)):
 if __name__ == "__main__":
     import uvicorn
 
-    uvicorn.run(app, host="127.0.0.1", port=8000, reload=False)
+    uvicorn.run(app, host="0.0.0.0", port=3001, reload=False)
