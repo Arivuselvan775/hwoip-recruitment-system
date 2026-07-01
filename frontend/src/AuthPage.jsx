@@ -272,15 +272,13 @@ export default function AuthPage() {
       type="text" 
       value={regMobile} 
       onChange={(e) => {
-        const val = e.target.value;
-        // 💡 ONLY ALLOW DIGITS: Letter or spaces logic matrix-ah block panrom
-        if (val === '' || /^[0-9\b]+$/.test(val)) {
-          setRegMobile(val);
-        }
+        const value = e.target.value.replace(/[^0-9]/g, '');
+        const truncatedValue = value.slice(0, 10);
+        setRegMobile(truncatedValue);
       }} 
       required 
       placeholder="e.g. 9876543210" 
-      style={{ padding: '11px 12px 11px 36px', borderRadius: '8px', border: `1px solid ${colors.border}`, background: colors.inputBg, color: colors.textMain }} 
+      style={{ width: '100%', padding: '11px 12px 11px 36px', borderRadius: '8px', border: `1px solid ${colors.border}`, background: colors.inputBg, color: colors.textMain }} 
     />
   </div>
 </div>
