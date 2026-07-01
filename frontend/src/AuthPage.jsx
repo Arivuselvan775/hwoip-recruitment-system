@@ -180,28 +180,33 @@ export default function AuthPage() {
                   />
                 </div>
               </div>
+<div style={{ marginBottom: '28px', position: 'relative' }}>
+  <label style={{ display: 'block', marginBottom: '6px', fontSize: '11px', fontWeight: '600', color: colors.textMuted, letterSpacing: '0.5px' }}>PASSWORD</label>
+  <div style={{ position: 'relative' }}>
+    
 
-              <div style={{ marginBottom: '28px', position: 'relative' }}>
-                <label style={{ display: 'block', marginBottom: '6px', fontSize: '11px', fontWeight: '600', color: colors.textMuted, letterSpacing: '0.5px' }}>PASSWORD</label>
-                <div style={{ position: 'relative' }}>
-                  <Lock size={16} style={{ position: 'absolute', left: '14px', top: '14px', color: colors.textMuted }} />
-                  <input
-                    type={showPassword ? "text" : "password"}
-                    value={loginPassword}
-                    onChange={(e) => setLoginPassword(e.target.value)}
-                    required
-                    placeholder="••••••••"
-                    style={{ width: '100%', padding: '13px 42px 13px 42px', borderRadius: '10px', border: `1px solid ${colors.border}`, background: colors.inputBg, color: colors.textMain }}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => setShowPassword(!showPassword)}
-                    style={{ position: 'absolute', right: '14px', top: '13px', background: 'none', border: 'none', color: colors.textMuted, cursor: 'pointer', padding: 0 }}
-                  >
-                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                  </button>
-                </div>
-              </div>
+
+    <input
+      type={showPassword ? "text" : "password"}
+      value={loginPassword}
+      onChange={(e) => setLoginPassword(e.target.value)}
+      required
+      placeholder="••••••••"
+    
+      style={{ width: '100%', padding: '13px 48px 13px 16px', borderRadius: '10px', border: `1px solid ${colors.border}`, background: colors.inputBg, color: colors.textMain }}
+    />
+    
+    <button
+      type="button"
+      onClick={() => setShowPassword(!showPassword)}
+      style={{ position: 'absolute', right: '12px', top: '10px', background: 'none', border: 'none', cursor: 'pointer', padding: 0, display: 'flex', alignItems: 'center' }}
+    >
+      {/* 👁️ Use <SharinganIcon /> here if you want the anime look or stick to standard icons below */}
+      {showPassword ? <EyeOff size={16} style={{ color: colors.textMuted }} /> : <Eye size={16} style={{ color: colors.textMuted }} />}
+    </button>
+
+  </div>
+</div>
 
               <button type="submit" style={{ width: '100%', padding: '14px', borderRadius: '10px', border: 'none', background: 'linear-gradient(135deg, #6366f1 0%, #4f46e5 100%)', color: '#fff', fontWeight: '600', fontSize: '14px', cursor: 'pointer', boxShadow: '0 4px 12px rgba(99, 102, 241, 0.2)' }}>
                 Authorize & Access Role
