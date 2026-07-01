@@ -1,12 +1,20 @@
 import React, { useState } from 'react';
-import { LogIn, Briefcase, MapPin, DollarSign, Calendar, Eye, EyeOff, ShieldCheck } from 'lucide-react';
+import { LogIn, Briefcase, MapPin, DollarSign, Eye, EyeOff, ShieldCheck, Code, Layers } from 'lucide-react';
+import CandidateApplyForm from './CandidateApplyForm'; // Ensure this file path is correct
+import CandidateDashboard from './CandidateDashboard'; // Ensure this file path is correct
 
 const MOCK_JOBS = [
-  { id: 1, title: 'Full Stack AI Engineer', dept: 'Engineering', exp: '2-4 Years', salary: '₹8,000 - ₹12,000', loc: 'Chennai, IN', type: 'Hybrid', skills: 'React, Node.js, Python, LLMs', jd: 'Looking for an elite full stack specialist to architect next-gen AI systems and operational pipelines.' },
-  { id: 2, title: 'UI/UX Designer', dept: 'Product Design', exp: '1-3 Years', salary: '₹6,000 - ₹9,000', loc: 'Remote', type: 'Remote', skills: 'Figma, Glassmorphism Aesthetics, Web3 Prototyping', jd: 'Design advanced clean minimal system interfaces with high usability parameters and immersive mockups.' }
+  { id: 1, title: 'Full Stack Developer', dept: 'Engineering', exp: '1-3 Years', salary: '₹35,000 - ₹55,000', loc: 'Chennai, IN', type: 'Hybrid', skills: 'React, Node.js, JavaScript, Supabase', jd: 'We are looking for an elite full stack specialist to architect next-gen applications, web platforms, and operational developer pipelines.' },
+  { id: 2, title: 'UI/UX Designer', dept: 'Product Design', exp: '1-2 Years', salary: '₹25,000 - ₹40,000', loc: 'Remote', type: 'Remote', skills: 'Figma, Glassmorphism Aesthetics, Minimalist UI', jd: 'Design advanced clean minimal system interfaces with high usability parameters, premium interactive screens, and web concepts.' }
 ];
 
-export default function AuthPage({ onNavigateToApply, onLoginSuccess }) {
+export default function AuthPage() {
+  // Navigation State Matrix
+  const [currentView, setCurrentView] = useState('FEED_LOGIN'); // FEED_LOGIN | APPLY_FORM | DASHBOARD
+  const [selectedJobTitle, setSelectedJobTitle] = useState('');
+  const [sessionUser, setSessionUser] = useState(null);
+
+  // Sign In Form States
   const [emailOrUser, setEmailOrUser] = useState('');
   const [password, setPassword] = useState('');
   const [showPass, setShowPass] = useState(false);
@@ -15,46 +23,83 @@ export default function AuthPage({ onNavigateToApply, onLoginSuccess }) {
   // Strict 7-Role configuration list (Candidate role totally removed)
   const AVAILABLE_ROLES = ['HR Manager', 'Operations Director', 'Intelligence Analyst', 'System Administrator', 'Recruiter', 'Finance Head', 'Executive Board'];
 
-  const handleLoginSubmit = (e) => {
-    e.preventDefault();
-    if(emailOrUser === "candidate@test.com" && password === "password123") {
-      onLoginSuccess({ name: "Demo Candidate", email: "candidate@test.com", id: "sample-id" });
-    } else {
-      alert("Verification Node: Active login authorized trigger via standard mock dashboard framework!");
-      onLoginSuccess({ name: emailOrUser, email: emailOrUser, id: "custom-id" });
-    }
+  const handleApplyClick = (jobTitle) => {
+    setSelectedJobTitle(jobTitle);
+    setCurrentView('APPLY_FORM'); // Safely triggers the Form View switcher node
   };
 
+  const handleLoginSubmit = (e) => {
+    e.preventDefault();
+    // Simulate candidate login bypass for dashboard verification view
+    setSessionUser({ name: emailOrUser, email: emailOrUser });
+    setCurrentView('DASHBOARD');
+  };
+
+  // ROUTING RENDER VIEW SELECTION SWITCH
+  if (currentView === 'APPLY_FORM') {
+    return (
+      <CandidateApplyForm 
+        jobTitle={selectedJobTitle} 
+        onBackToFeed={() => setCurrentView('FEED_LOGIN')} 
+      />
+    );
+  }
+
+  if (currentView === 'DASHBOARD') {
+    return (
+      <CandidateDashboard 
+        user={sessionUser} 
+        onLogout={() => {
+          setSessionUser(null);
+          setCurrentView('FEED_LOGIN');
+        }} 
+      />
+    );
+  }
+
   return (
-    <div style={{ display: 'flex', minHeight: '100vh', width: '100vw', background: '#f8fafc', boxSizing: 'border-box' }}>
+    <div style={{ display: 'flex', minHeight: '100vh', width: '100vw', background: '#f8fafc', boxSizing: 'border-box', fontFamily: 'sans-serif' }}>
       
       {/* LEFT SIDE: COMPANY INFO & JOB OPENINGS BOARD */}
       <div style={{ width: '60%', padding: '50px', display: 'flex', flexDirection: 'column', gap: '30px', overflowY: 'auto', maxHeight: '100vh', boxSizing: 'border-box', borderRight: '1px solid #e2e8f0' }}>
         <div>
-          <h1 style={{ fontSize: '38px', fontWeight: '900', color: '#0f172a', margin: 0, letterSpacing: '-1px' }}>HWOIP Workspace</h1>
-          <p style={{ fontSize: '15px', color: '#475569', marginTop: '10px', lineHeight: '1.6', maxWidth: '600px' }}>
-            Welcome to the Operations & Intelligence Recruitment Node. We specialize in cross-functional system engineering, full-stack application models, and high-performance automated data pipelines. Explore continuous active operations vacancies below.
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', color: '#2563eb', marginBottom: '4px' }}>
+            <Code size={32} strokeWidth={2.5} />
+            <span style={{ fontSize: '14px', fontWeight: '800', tracking: '1px', textTransform: 'uppercase', color: '#64748b' }}>Service Hub</span>
+          </div>
+          <h1 style={{ fontSize: '36px', fontWeight: '900', color: '#0f172a', margin: 0, letterSpacing: '-1px' }}>
+            Navaneethan Dev Studio
+          </h1>
+          <p style={{ fontSize: '15px', color: '#475569', marginTop: '12px', lineHeight: '1.6', maxWidth: '650px' }}>
+            Welcome to our professional portfolio and application development portal. We engineer production-grade websites, full-stack architectures, and high-performance automated software solutions. Explore active career slots below and submit your profile setup.
           </p>
         </div>
 
-        <hr style={{ border: 'none', height: '1px', background: '#e2e8f0' }} />
+        <hr style={{ border: 'none', height: '1px', background: '#e2e8f0', margin: 0 }} />
 
         <div>
-          <h3 style={{ fontSize: '18px', fontWeight: '700', color: '#1e293b', marginBottom: '16px' }}>Ongoing Job Openings</h3>
+          <h3 style={{ fontSize: '18px', fontWeight: '700', color: '#1e293b', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+            <Layers size={18} style={{ color: '#2563eb' }} /> Ongoing Job Openings
+          </h3>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
             {MOCK_JOBS.map(job => (
-              <div key={job.id} style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '16px', padding: '24px', boxShadow: '0 4px 12px rgba(0,0,0,0.01)', transition: 'transform 0.2s' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+              <div key={job.id} style={{ background: '#ffffff', border: '1px solid #e2e8f0', borderRadius: '16px', padding: '24px', boxShadow: '0 4px 12px rgba(0,0,0,0.01)' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '15px' }}>
                   <div>
                     <span style={{ fontSize: '11px', fontWeight: '700', background: '#eff6ff', color: '#2563eb', padding: '4px 10px', borderRadius: '20px' }}>{job.dept}</span>
                     <h4 style={{ margin: '8px 0 4px 0', fontSize: '20px', fontWeight: '700', color: '#0f172a' }}>{job.title}</h4>
-                    <p style={{ margin: 0, fontSize: '13px', color: '#64748b', display: 'flex', gap: '15px', marginTop: '6px' }}>
+                    <p style={{ margin: 0, fontSize: '13px', color: '#64748b', display: 'flex', flexWrap: 'wrap', gap: '15px', marginTop: '6px' }}>
                       <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><MapPin size={14}/> {job.loc} ({job.type})</span>
                       <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><Briefcase size={14}/> {job.exp}</span>
                       <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}><DollarSign size={14}/> {job.salary}</span>
                     </p>
                   </div>
-                  <button onClick={() => onNavigateToApply(job.title)} style={{ padding: '10px 20px', background: '#2563eb', color: '#fff', border: 'none', borderRadius: '10px', fontWeight: '700', fontSize: '13px', cursor: 'pointer', boxShadow: '0 4px 12px rgba(37,99,235,0.15)' }}>Apply Now</button>
+                  <button 
+                    onClick={() => handleApplyClick(job.title)} 
+                    style={{ padding: '11px 22px', background: '#2563eb', color: '#fff', border: 'none', borderRadius: '10px', fontWeight: '700', fontSize: '13px', cursor: 'pointer', boxShadow: '0 4px 12px rgba(37,99,235,0.15)', whiteSpace: 'nowrap' }}
+                  >
+                    Apply Now
+                  </button>
                 </div>
                 <div style={{ marginTop: '14px', fontSize: '13px', color: '#334155', background: '#f8fafc', padding: '12px', borderRadius: '8px', lineHeight: '1.5' }}>{job.jd}</div>
                 <div style={{ marginTop: '10px', fontSize: '12px', fontWeight: '600', color: '#64748b' }}><strong>Required Stack:</strong> {job.skills}</div>
@@ -64,7 +109,7 @@ export default function AuthPage({ onNavigateToApply, onLoginSuccess }) {
         </div>
       </div>
 
-      {/* RIGHT SIDE: EXCLUSIVE SECURE 7-ROLE SIGN IN SECTION */}
+      {/* RIGHT SIDE: SECURE 7-ROLE SIGN IN SECTION */}
       <div style={{ width: '40%', background: '#ffffff', display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '40px', boxSizing: 'border-box' }}>
         <div style={{ width: '100%', maxWidth: '360px' }}>
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', marginBottom: '30px' }}>
