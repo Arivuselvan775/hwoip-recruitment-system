@@ -15,17 +15,99 @@ const CandidateDashboard = ({ candidateUser,appliedJobs,ongoingJobs,onBack,onLog
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#f0f4f8', fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif", padding: '0' }}>
       {/* Header */}
-      <div style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', padding: '32px 40px', color: '#fff', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '16px' }}>
-          <div style={{ width: '56px', height: '56px', borderRadius: '12px', background: 'rgba(255,255,255,0.2)', display: 'flex', alignItems: 'center', justifyContent: 'center', backdropFilter: 'blur(10px)', border: '1px solid rgba(255,255,255,0.3)' }}>
-            <FaUser size={24} />
-          </div>
-          <div>
-            <h1 style={{ margin: 0, fontSize: '1.8rem', fontWeight: '900' }}>Welcome Back, {candidateUser?.username || 'Candidate'}</h1>
-            <p style={{ margin: '4px 0 0', color: 'rgba(255,255,255,0.9)', fontSize: '0.9rem' }}>Your application journey dashboard</p>
-          </div>
-        </div>
+<div
+  style={{
+    background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
+    padding: "32px 40px",
+    color: "#fff",
+    boxShadow: "0 2px 8px rgba(0,0,0,0.1)"
+  }}
+>
+  <div
+    style={{
+      display: "flex",
+      justifyContent: "space-between",
+      alignItems: "center",
+      flexWrap: "wrap"
+    }}
+  >
+    <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+      <div
+        style={{
+          width: "56px",
+          height: "56px",
+          borderRadius: "12px",
+          background: "rgba(255,255,255,0.2)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          backdropFilter: "blur(10px)",
+          border: "1px solid rgba(255,255,255,0.3)"
+        }}
+      >
+        <FaUser size={24} />
       </div>
+
+      <div>
+        <h1 style={{ margin: 0, fontSize: "1.8rem", fontWeight: "900" }}>
+          Welcome Back, {candidateUser?.username || "Candidate"}
+        </h1>
+
+        <p
+          style={{
+            margin: "4px 0 0",
+            color: "rgba(255,255,255,0.9)",
+            fontSize: "0.9rem"
+          }}
+        >
+          Your application journey dashboard
+        </p>
+      </div>
+    </div>
+
+    <div style={{ display: "flex", gap: "12px" }}>
+
+      <button
+        onClick={onBack}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "6px",
+          padding: "10px 18px",
+          border: "none",
+          borderRadius: "8px",
+          background: "#fff",
+          color: "#667eea",
+          fontWeight: "700",
+          cursor: "pointer"
+        }}
+      >
+        <FaArrowLeft />
+        Back
+      </button>
+
+      <button
+        onClick={onLogout}
+        style={{
+          display: "flex",
+          alignItems: "center",
+          gap: "6px",
+          padding: "10px 18px",
+          border: "none",
+          borderRadius: "8px",
+          background: "#ef4444",
+          color: "#fff",
+          fontWeight: "700",
+          cursor: "pointer"
+        }}
+      >
+        <FaSignOutAlt />
+        Logout
+      </button>
+
+    </div>
+  </div>
+</div>
 
       <div style={{ maxWidth: '1400px', margin: '0 auto', padding: '40px 20px' }}>
         {/* Stats Cards */}
