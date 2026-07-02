@@ -1,6 +1,8 @@
 import os
 from uuid import uuid4
+import logging
 
+logger = logging.getLogger(__name__)
 from fastapi import Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, EmailStr
@@ -331,47 +333,170 @@ def health_check() -> dict:
 
 @app.get("/api/jobs")
 def list_jobs(conn=Depends(get_db)) -> dict:
+    logger.debug("========== list_jobs() started ==========")
+
     cursor = conn.cursor()
-    cursor.execute(
-        """
-        SELECT j.id, j.title, COALESCE(d.department_name, 'General') AS dept,
-               j.location, j.employment_type AS job_type,
-               j.experience_required AS exp, j.salary_min, j.salary_max,
-               j.skills_required AS skills, j.job_description AS jd
-        FROM jobs j
-        LEFT JOIN departments d ON j.department_id = d.id
-        WHERE j.status <> 'DRAFT'
-        ORDER BY j.created_at DESC
-        LIMIT 20;
-        """
-    )
+    logger.debug("Database cursor created.")
+
+    try:
+        logger.debug("Checking if 'opening_positions' table exists...")
+        cursor.execute("SELECT to_regclass('public.opening_positions')")
+        opening_positions_table = cursor.fetchone()[0]
+        logger.debug(
+            "opening_positions table exists: %s",
+            bool(opening_positions_table),
+        )
+    except Exception as e:
+        logger.exception("Error while checking opening_positions table: %s", e)
+        opening_positions_table = None
+
+    if opening_positions_table:
+        logger.debug("Using opening_positions table.")
+
+        cursor.execute("SELECT COUNT(*) AS count FROM opening_positions")
+        opening_positions_count = cursor.fetchone()["count"]
+
+        logger.debug(
+            "opening_positions row count: %s",
+            opening_positions_count,
+        )
+
+        if opening_positions_count < 10:
+            logger.debug(
+                "Less than 10 records found. Seeding default jobs..."
+            )
+            seed_default_jobs(cursor)
+            conn.commit()
+            logger.debug("Default jobs seeded successfully.")
+
+        logger.debug("Fetching jobs from opening_positions...")
+        cursor.execute(
+            """
+            SELECT id, title, department_name, location, employment_type, experience_required,
+                   salary_min, salary_max, skills_required, job_description
+            FROM opening_positions
+            WHERE status <> 'DRAFT'
+            ORDER BY created_at DESC
+            LIMIT 20;
+            """
+        )
+
+    else:
+        logger.debug(
+            "opening_positions table not found. Falling back to jobs table."
+        )
+
+        cursor.execute("SELECT COUNT(*) AS count FROM jobs")
+        jobs_count = cursor.fetchone()["count"]
+
+        logger.debug("jobs table row count: %s", jobs_count)
+
+        if jobs_count == 0:
+            logger.debug("jobs table is empty. Seeding default jobs...")
+            seed_default_jobs(cursor)
+            conn.commit()
+            logger.debug("Default jobs seeded into jobs table.")
+
+        logger.debug("Fetching jobs table column names...")
+        cursor.execute(
+            """
+            SELECT column_name
+            FROM information_schema.columns
+            WHERE table_schema='public'
+            AND table_name='jobs'
+            """
+        )
+
+        job_columns = {
+            row["column_name"]
+            for row in cursor.fetchall()
+        }
+
+        logger.debug("Available columns: %s", sorted(job_columns))
+
+        if "department_name" in job_columns:
+            logger.debug(
+                "'department_name' column exists. Using direct query."
+            )
+
+            cursor.execute(
+                """
+                SELECT id, title, department_name, location, employment_type, experience_required,
+                       salary_min, salary_max, skills_required, job_description
+                FROM jobs
+                WHERE status <> 'DRAFT'
+                ORDER BY created_at DESC
+                LIMIT 20;
+                """
+            )
+
+        else:
+            logger.debug(
+                "'department_name' column missing. Joining with departments table."
+            )
+
+            cursor.execute(
+                """
+                SELECT j.id, j.title, d.department_name, j.location,
+                       j.employment_type, j.experience_required,
+                       j.salary_min, j.salary_max,
+                       j.skills_required, j.job_description
+                FROM jobs j
+                LEFT JOIN departments d ON d.id = j.department_id
+                WHERE j.status <> 'DRAFT'
+                ORDER BY j.created_at DESC
+                LIMIT 20;
+                """
+            )
+
     rows = cursor.fetchall()
 
-    if rows:
-        jobs = []
-        for row in rows:
-            salary = None
-            if row["salary_min"] is not None or row["salary_max"] is not None:
-                if row["salary_min"] is not None and row["salary_max"] is not None:
-                    salary = f"₹{row['salary_min']}-{row['salary_max']}"
-                elif row["salary_min"] is not None:
-                    salary = f"₹{row['salary_min']}+"
-                elif row["salary_max"] is not None:
-                    salary = f"Up to ₹{row['salary_max']}"
-            jobs.append(
-                {
-                    "id": str(row["id"]),
-                    "title": row["title"],
-                    "dept": row["dept"] or "General",
-                    "exp": row["exp"] or "Not specified",
-                    "salary": salary or "Competitive",
-                    "location": row["location"] or "Remote",
-                    "type": row["job_type"] or "FULL_TIME",
-                    "skills": row["skills"] or "Open",
-                    "jd": row["jd"] or "Exciting opportunity with HWOIP.",
-                }
-            )
-        return {"jobs": jobs}
+    logger.debug("Fetched %d job records.", len(rows))
+
+    jobs = []
+
+    for index, row in enumerate(rows, start=1):
+        logger.debug(
+            "Processing job #%d | id=%s | title=%s",
+            index,
+            row["id"],
+            row["title"],
+        )
+
+        salary = None
+
+        if row["salary_min"] is not None or row["salary_max"] is not None:
+            if row["salary_min"] is not None and row["salary_max"] is not None:
+                salary = f"₹{row['salary_min']}-{row['salary_max']}"
+            elif row["salary_min"] is not None:
+                salary = f"₹{row['salary_min']}+"
+            elif row["salary_max"] is not None:
+                salary = f"Up to ₹{row['salary_max']}"
+
+        logger.debug(
+            "Computed salary for job %s: %s",
+            row["id"],
+            salary,
+        )
+
+        jobs.append(
+            {
+                "id": str(row["id"]),
+                "title": row["title"],
+                "dept": row["department_name"] or row.get("dept") or "General",
+                "exp": row["experience_required"] or "Not specified",
+                "salary": salary or "Competitive",
+                "location": row["location"] or "Remote",
+                "type": row["employment_type"] or "FULL_TIME",
+                "skills": row["skills_required"] or "Open",
+                "jd": row["job_description"] or "Exciting opportunity with HWOIP.",
+            }
+        )
+
+    logger.debug("Returning %d jobs.", len(jobs))
+    logger.debug("========== list_jobs() completed ==========")
+
+    return {"jobs": jobs}
 
     return {
         "jobs": [
