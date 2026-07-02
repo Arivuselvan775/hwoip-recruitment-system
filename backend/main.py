@@ -527,6 +527,7 @@ def login(data: LoginSchema, conn=Depends(get_db)):
         },
     }
 
+
 @app.post("/api/applications/submit")
 def submit_application(data: ApplicationSubmissionSchema, conn=Depends(get_db)):
     print(f"[DEBUG POST /api/applications/submit] Incoming payload. email='{data.email}', target_job='{data.jobTitle}'")
@@ -619,43 +620,6 @@ def submit_application(data: ApplicationSubmissionSchema, conn=Depends(get_db)):
         print(f"[DEBUG WARNING /api/applications/submit] Conflict: {exc}")
         if "email" in str(exc):
             raise HTTPException(status_code=400, detail="This email is already registered.") from exc
-
-# --- Namma puthiya API Endpoint ithu thaan ---
-@app.get("/api/candidates/{candidate_id}/applications")
-def get_candidate_applications(candidate_id: str, conn=Depends(get_db)):
-    print(f"[DEBUG GET] Fetching applications for candidate_id={candidate_id}")
-    cursor = conn.cursor()
-    try:
-        cursor.execute(
-            """
-            SELECT j.id, j.title, j.department_name AS dept, j.location, 
-                   j.employment_type AS type, j.experience_required AS exp,
-                   j.skills_required AS skills, j.job_description AS jd,
-                   ca.application_status AS status
-            FROM candidate_applications ca
-            JOIN jobs j ON ca.job_id = j.id
-            WHERE ca.candidate_id = %s
-            ORDER BY ca.applied_at DESC;
-            """,
-            (candidate_id,),
-        )
-        rows = cursor.fetchall()
+            
         
-        applied_jobs = []
-        for row in rows:
-            applied_jobs.append({
-                "id": str(row["id"]),
-                "title": row["title"],
-                "dept": row["dept"] or "General",
-                "exp": row["exp"] or "Not specified",
-                "salary": "Competitive",
-                "location": row["location"] or "Remote",
-                "type": row["type"] or "FULL_TIME",
-                "skills": row["skills"] or "Open",
-                "jd": row["jd"] or "",
-                "status": row["status"] or "Applied"
-            })
-        return {"applied_jobs": applied_jobs}
-    except Exception as exc:
-        print(f"[DEBUG ERROR] Failed to fetch candidate applications: {exc}")
-        raise HTTPException(status_code=500, detail="Could not retrieve application history.")
+       
