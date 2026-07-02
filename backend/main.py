@@ -557,20 +557,76 @@ def submit_application(data: ApplicationSubmissionSchema, conn=Depends(get_db)):
                 print(f"[DEBUG WARNING] Numerical experience conversion exception from raw value: '{data.experience}'")
                 experience_years = None
 
-        candidate_id = str(uuid4())
-        print(f"[DEBUG] Registering entry profiles for Candidate ID: {candidate_id}")
+                # Check if candidate already exists
         cursor.execute(
             """
-            INSERT INTO candidates (
-                id, username, email, password_hash, full_name, phone_number, address, gender,
-                degree, graduation_year, experience_years, skills, current_company, expected_salary,
-                cover_letter, resume_file_name, resume_file_url, source_channel, current_status
-            )
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
+            SELECT id
+            FROM candidates
+            WHERE email = %s;
             """,
-            (candidate_id, username, str(data.email), data.password, data.fullName, data.phoneNumber, data.address, data.gender, data.degree, data.graduationYear, experience_years, data.skills, data.currentCompany, data.expectedSalary, data.coverLetter, data.resumeName, data.resumeData, "PUBLIC_FORM", "APPLIED"),
+            (str(data.email),)
         )
 
+        existing_candidate = cursor.fetchone()
+
+        if existing_candidate:
+            candidate_id = str(existing_candidate["id"])
+            print(f"[DEBUG] Existing Candidate Found : {candidate_id}")
+
+        else:
+            candidate_id = str(uuid4())
+
+            print(f"[DEBUG] Creating New Candidate : {candidate_id}")
+
+            cursor.execute(
+                """
+                INSERT INTO candidates (
+                    id,
+                    username,
+                    email,
+                    password_hash,
+                    full_name,
+                    phone_number,
+                    address,
+                    gender,
+                    degree,
+                    graduation_year,
+                    experience_years,
+                    skills,
+                    current_company,
+                    expected_salary,
+                    cover_letter,
+                    resume_file_name,
+                    resume_file_url,
+                    source_channel,
+                    current_status
+                )
+                VALUES (
+                    %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s
+                );
+                """,
+                (
+                    candidate_id,
+                    username,
+                    str(data.email),
+                    data.password,
+                    data.fullName,
+                    data.phoneNumber,
+                    data.address,
+                    data.gender,
+                    data.degree,
+                    data.graduationYear,
+                    experience_years,
+                    data.skills,
+                    data.currentCompany,
+                    data.expectedSalary,
+                    data.coverLetter,
+                    data.resumeName,
+                    data.resumeData,
+                    "PUBLIC_FORM",
+                    "APPLIED",
+                ),
+            )
         print(f"[DEBUG] Checking if job profile already exists for '{data.jobTitle}'")
         cursor.execute("SELECT id FROM jobs WHERE title = %s LIMIT 1;", (data.jobTitle,))
         existing_job = cursor.fetchone()
