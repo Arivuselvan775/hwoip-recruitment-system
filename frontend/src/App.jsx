@@ -156,10 +156,7 @@ function App() {
     }
   };
 
-  // Back Button
-  const handleBack = () => {
-    setView('auth');
-  };
+
 
   // Logout Button
   const handleLogout = () => {
@@ -206,7 +203,6 @@ function App() {
           candidateUser={candidateUser}
           appliedJobs={appliedJobs}
           ongoingJobs={jobs}
-          onBack={handleBack}
           onLogout={handleLogout}
         />
       )}

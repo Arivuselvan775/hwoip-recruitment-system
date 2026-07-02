@@ -1,8 +1,8 @@
 import React from 'react';
 
-import { FaArrowRight, FaCheckCircle, FaClipboardList, FaBriefcase, FaUser, FaClock, FaMapMarkerAlt, FaDollarSign, FaFileAlt, FaArrowLeft, FaSignOutAlt } from "react-icons/fa";
+import { FaArrowRight, FaCheckCircle, FaClipboardList, FaBriefcase, FaUser, FaClock, FaMapMarkerAlt, FaDollarSign, FaFileAlt,  FaSignOutAlt } from "react-icons/fa";
 
-const CandidateDashboard = ({ candidateUser, appliedJobs, ongoingJobs, onBack, onLogout }) => {
+const CandidateDashboard = ({ candidateUser, appliedJobs, ongoingJobs,  onLogout }) => {
   const applicationStatus = 'Under Review';
   const steps = [
     { label: 'Applied', desc: 'Your profile has been received', icon: '📋', completed: true },
@@ -32,11 +32,6 @@ const CandidateDashboard = ({ candidateUser, appliedJobs, ongoingJobs, onBack, o
     </div>
 
     <div style={{ display: 'flex', gap: '12px' }}>
-      <button onClick={onBack} style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '10px 18px', border: 'none', borderRadius: '8px', background: '#fff', color: '#667eea', fontWeight: '700', cursor: 'pointer' }}>
-        <FaArrowLeft />
-        Back
-      </button>
-
       <button onClick={onLogout} style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '10px 18px', border: 'none', borderRadius: '8px', background: '#ef4444', color: '#fff', fontWeight: '700', cursor: 'pointer' }}>
         <FaSignOutAlt />
         Logout
