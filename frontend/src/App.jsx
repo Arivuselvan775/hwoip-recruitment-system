@@ -4,10 +4,6 @@ import AuthPage from './AuthPage';
 import ApplicationForm from './ApplicationForm';
 import CandidateDashboard from './CandidateDashboard';
 
-const fallbackJobs = [
-  { id: 1, title: 'Arivoli Developer', dept: 'Frontend', exp: '2+ Years', salary: '6-10 LPA', location: 'Remote', type: 'Remote', skills: 'React, JavaScript', jd: 'Build scalable user interfaces for healthcare workforce products and collaborate with design and backend teams.' },
-  { id: 2, title: 'FastAPI Backend', dept: 'Backend', exp: '3+ Years', salary: '8-12 LPA', location: 'Hybrid', type: 'Hybrid', skills: 'Python, FastAPI', jd: 'Design REST APIs and data models for recruitment workflows, integrations, and reporting.' }
-];
 
 const roleOptions = [
   { value: 'DELIVERY_HEAD', label: 'Delivery Head' },
@@ -34,21 +30,25 @@ function App() {
 
   const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
-  useEffect(() => {
-    const loadJobs = async () => {
-      try {
-        const response = await axios.get(`${apiBaseUrl}/api/jobs`);
-        const payloadJobs = response.data?.jobs || [];
-        if (payloadJobs.length > 0) {
-          setJobs(payloadJobs);
-        }
-      } catch {
-        setJobs(fallbackJobs);
-      }
-    };
+useEffect(() => {
+  const loadJobs = async () => {
+    setJobsLoading(true);
 
-    loadJobs();
-  }, [apiBaseUrl]);
+    try {
+      const response = await axios.get(`${apiBaseUrl}/api/jobs`);
+      const payloadJobs = response.data?.jobs || [];
+
+      setJobs(payloadJobs);
+    } catch (error) {
+      console.error("Failed to load jobs:", error);
+      setJobs([]);
+    } finally {
+      setJobsLoading(false);
+    }
+  };
+
+  loadJobs();
+}, [apiBaseUrl]);
 
   const handleApplyClick = (job) => {
     setSelectedJob(job);
