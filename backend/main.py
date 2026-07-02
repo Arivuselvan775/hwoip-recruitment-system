@@ -393,13 +393,13 @@ def list_jobs(conn=Depends(get_db)) -> dict:
             {
                 "id": str(row["id"]),
                 "title": row["title"],
-                "dept": row["id"] or row.get("dept") or "General",
-                "exp": row["experience_required"] or "Not specified",
+                "dept": row["dept"] or "General",
+                "exp": row["exp"] or "Not specified",
                 "salary": salary or "Competitive",
                 "location": row["location"] or "Remote",
-                "type": row["employment_type"] or "FULL_TIME",
-                "skills": row["skills_required"] or "Open",
-                "jd": row["job_description"] or "Exciting opportunity with HWOIP.",
+                "type": row["job_type"] or "FULL_TIME",
+                "skills": row["skills"] or "Open",
+                "jd": row["jd"] or "Exciting opportunity with HWOIP.",
             }
         )
 
