@@ -24,7 +24,8 @@ const roleOptions = [
 function App() {
   const [view, setView] = useState('auth');
   const [selectedJob, setSelectedJob] = useState(null);
-  const [jobs, setJobs] = useState(fallbackJobs);
+  const [jobs, setJobs] = useState([]);
+  const [jobsLoading, setJobsLoading] = useState(true);
   const [authForm, setAuthForm] = useState({ usernameOrEmail: '', password: '', role: 'DELIVERY_HEAD' });
   const [authError, setAuthError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
