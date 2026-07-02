@@ -1,7 +1,8 @@
 import React from 'react';
 import { FaArrowRight, FaCheckCircle, FaClipboardList, FaBriefcase, FaUser, FaClock, FaMapMarkerAlt, FaDollarSign, FaFileAlt } from 'react-icons/fa';
+import {FaArrowRight,FaCheckCircle,FaClipboardList,FaBriefcase,FaUser,FaClock,FaMapMarkerAlt,FaDollarSign,FaFileAlt,FaArrowLeft,FaSignOutAlt} from "react-icons/fa";
 
-const CandidateDashboard = ({ candidateUser, appliedJobs, ongoingJobs }) => {
+const CandidateDashboard = ({ candidateUser,appliedJobs,ongoingJobs,onBack,onLogout}) => {
   const applicationStatus = 'Under Review';
   const steps = [
     { label: 'Applied', desc: 'Your profile has been received', icon: '📋', completed: true },
