@@ -676,10 +676,10 @@ def submit_application(data: ApplicationSubmissionSchema, conn=Depends(get_db)):
         print(f"[DEBUG WARNING /api/applications/submit] Conflict: {exc}")
         if "email" in str(exc):
             raise HTTPException(status_code=400, detail="This email is already registered.") from exc
+        
         @app.get("/api/candidate/{candidate_id}/applications")
-def get_candidate_applications(candidate_id: str, conn=Depends(get_db)):
-    cursor = conn.cursor()
-
+        def get_candidate_applications(candidate_id: str, conn=Depends(get_db)):
+            cursor = conn.cursor()
     try:
         cursor.execute(
             """
@@ -734,6 +734,7 @@ def get_candidate_applications(candidate_id: str, conn=Depends(get_db)):
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
+        
             
         
        
