@@ -63,7 +63,7 @@ const CandidateDashboard = ({ candidateUser, appliedJobs, ongoingJobs,  onLogout
                 <FaBriefcase size={18} />
               </div>
             </div>
-            <p style={{ margin: 0, fontSize: '2rem', color: '#10b981', fontWeight: '900', marginBottom: '4px' }}>{ongoingJobs.length}</p>
+            <p style={{ margin: 0, fontSize: '2rem', color: '#10b981', fontWeight: '900', marginBottom: '4px' }}>{ongoingJobs.filter((job) =>!appliedJobs.some((appliedJob) => appliedJob.id === job.id )).length}</p>
             <p style={{ margin: 0, color: '#999', fontSize: '0.8rem' }}>Available positions</p>
           </div>
 
