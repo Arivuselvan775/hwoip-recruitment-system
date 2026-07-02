@@ -425,6 +425,7 @@ def register_candidate(data: CandidateRegisterSchema, conn=Depends(get_db)):
 
 @app.post("/api/auth/login")
 def login(data: LoginSchema, conn=Depends(get_db)):
+    print(f"DEBUG LOGIN: username_or_email='{data.username_or_email}', password='{data.password}'")
     cursor = conn.cursor()
 
     cursor.execute(
@@ -440,6 +441,7 @@ def login(data: LoginSchema, conn=Depends(get_db)):
     if candidate:
         db_password = str(candidate["password_hash"]).strip()
         input_password = str(data.password).strip()
+        print(f"DEBUG CANDIDATE FOUND: db_pass='{db_password}', input_pass='{input_password}'")
         if db_password == input_password:
             return {
                 "status": "success",
@@ -463,10 +465,12 @@ def login(data: LoginSchema, conn=Depends(get_db)):
     user = cursor.fetchone()
 
     if not user:
+        print(f"DEBUG USER NOT FOUND FOR username_or_email='{data.username_or_email}'")
         raise HTTPException(status_code=401, detail="Authentication failed: User account not found.")
 
     db_password = str(user["password_hash"]).strip()
     input_password = str(data.password).strip()
+    print(f"DEBUG USER FOUND: db_pass='{db_password}', input_pass='{input_password}', match={db_password == input_password}")
 
     if db_password != input_password:
         raise HTTPException(status_code=401, detail="Authentication failed: Invalid password credentials.")
