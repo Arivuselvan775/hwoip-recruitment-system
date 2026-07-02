@@ -200,7 +200,7 @@ const CandidateDashboard = ({ candidateUser, appliedJobs, ongoingJobs,  onLogout
 
           {ongoingJobs.length > 0 ? (
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '16px' }}>
-              {ongoingJobs.slice(0, 6).map((job) => (
+            {ongoingJobs.filter((job) =>!appliedJobs.some((appliedJob) => appliedJob.id === job.id)).slice(0, 6).map((job) => (
                 <div
                   key={job.id}
                   style={{
