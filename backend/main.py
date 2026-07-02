@@ -365,7 +365,7 @@ def list_jobs(conn=Depends(get_db)) -> dict:
             logger.debug(
                 "Less than 10 records found. Seeding default jobs..."
             )
-            seed_default_jobs(cursor)
+            #seed_default_jobs(cursor)
             conn.commit()
             logger.debug("Default jobs seeded successfully.")
 
@@ -393,7 +393,7 @@ def list_jobs(conn=Depends(get_db)) -> dict:
 
         if jobs_count == 0:
             logger.debug("jobs table is empty. Seeding default jobs...")
-            seed_default_jobs(cursor)
+            #seed_default_jobs(cursor)
             conn.commit()
             logger.debug("Default jobs seeded into jobs table.")
 
