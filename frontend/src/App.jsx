@@ -4,7 +4,6 @@ import AuthPage from './AuthPage';
 import ApplicationForm from './ApplicationForm';
 import CandidateDashboard from './CandidateDashboard';
 
-
 const roleOptions = [
   { value: 'DELIVERY_HEAD', label: 'Delivery Head' },
   { value: 'HR_EXECUTIVE', label: 'HR Executive' },
@@ -15,10 +14,9 @@ const roleOptions = [
   { value: 'SYSTEM_ADMINISTRATOR', label: 'System Administrator' }
 ];
 
-
-
 function App() {
-  const [view, setView] = useState('auth');
+  // Page refresh analum state maintain aaga localStorage initialize pandrom
+  const [view, setView] = useState(() => localStorage.getItem('app_view') || 'auth');
   const [selectedJob, setSelectedJob] = useState(null);
   const [jobs, setJobs] = useState([]);
   const [jobsLoading, setJobsLoading] = useState(true);
@@ -26,29 +24,58 @@ function App() {
   const [authError, setAuthError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
   const [appliedJobs, setAppliedJobs] = useState([]);
-  const [candidateUser, setCandidateUser] = useState(null);
+  const [candidateUser, setCandidateUser] = useState(() => {
+    const savedUser = localStorage.getItem('candidate_user');
+    return savedUser ? JSON.parse(savedUser) : null;
+  });
 
   const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000';
 
-useEffect(() => {
-  const loadJobs = async () => {
-    setJobsLoading(true);
+  // State maarumpothu localstorage-il update seiyum side-effects
+  useEffect(() => {
+    localStorage.setItem('app_view', view);
+  }, [view]);
 
-    try {
-      const response = await axios.get(`${apiBaseUrl}/api/jobs`);
-      const payloadJobs = response.data?.jobs || [];
-
-      setJobs(payloadJobs);
-    } catch (error) {
-      console.error("Failed to load jobs:", error);
-      setJobs([]);
-    } finally {
-      setJobsLoading(false);
+  useEffect(() => {
+    if (candidateUser) {
+      localStorage.setItem('candidate_user', JSON.stringify(candidateUser));
+    } else {
+      localStorage.removeItem('candidate_user');
     }
-  };
+  }, [candidateUser]);
 
-  loadJobs();
-}, [apiBaseUrl]);
+  // Public Jobs load panna
+  useEffect(() => {
+    const loadJobs = async () => {
+      setJobsLoading(true);
+      try {
+        const response = await axios.get(`${apiBaseUrl}/api/jobs`);
+        const payloadJobs = response.data?.jobs || [];
+        setJobs(payloadJobs);
+      } catch (error) {
+        console.error("Failed to load jobs:", error);
+        setJobs([]);
+      } finally {
+        setJobsLoading(false);
+      }
+    };
+    loadJobs();
+  }, [apiBaseUrl]);
+
+  // Candidate login aanavudan allathu page refresh aanavudan applied jobs-ai real-time-il fetch seiyum logic
+  useEffect(() => {
+    const fetchAppliedJobs = async () => {
+      if (candidateUser && candidateUser.id) {
+        try {
+          const response = await axios.get(`${apiBaseUrl}/api/candidates/${candidateUser.id}/applications`);
+          setAppliedJobs(response.data.applied_jobs || []);
+        } catch (error) {
+          console.error("Error fetching applied jobs:", error);
+        }
+      }
+    };
+    fetchAppliedJobs();
+  }, [candidateUser, apiBaseUrl]);
 
   const handleApplyClick = (job) => {
     setSelectedJob(job);
@@ -104,7 +131,7 @@ useEffect(() => {
         fullJobDescription: selectedJob.jd
       });
 
-      setAppliedJobs((prev) => [...prev, { ...selectedJob, status: 'Applied' }]);
+      // Submit aanathum fresh list-ai back-end-il irunthu automatic-ah pull panna fetch-i handle pannum
       setSelectedJob(null);
       setView('auth');
       setAuthForm({ usernameOrEmail: payload.email, password: payload.password, role: 'DELIVERY_HEAD' });
@@ -112,6 +139,14 @@ useEffect(() => {
     } catch (error) {
       throw new Error(error.response?.data?.detail || 'Unable to submit application.');
     }
+  };
+
+  // Sign out method candidate dashboard refresh validation-ku easy-ah erukum
+  const handleSignOut = () => {
+    setCandidateUser(null);
+    setAppliedJobs([]);
+    setView('auth');
+    localStorage.clear();
   };
 
   return (
@@ -130,7 +165,7 @@ useEffect(() => {
       ) : view === 'form' && selectedJob ? (
         <ApplicationForm job={selectedJob} onClose={() => { setSelectedJob(null); setView('auth'); }} onSubmit={handleApplicationSubmit} />
       ) : (
-        <CandidateDashboard candidateUser={candidateUser} appliedJobs={appliedJobs} ongoingJobs={jobs} />
+        <CandidateDashboard candidateUser={candidateUser} appliedJobs={appliedJobs} ongoingJobs={jobs} onSignOut={handleSignOut} />
       )}
     </div>
   );
