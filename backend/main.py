@@ -347,11 +347,14 @@ def list_jobs(conn=Depends(get_db)) -> dict:
                    j.experience_required AS exp, j.salary_min, j.salary_max,
                    j.skills_required AS skills, j.job_description AS jd
             FROM jobs j
-            WHERE j.status <> 'DRAFT'
+            WHERE j.status = 'OPEN'
             ORDER BY j.created_at DESC
             LIMIT 20;
             """
         )
+        
+        #{ id: 1, title: 'Arivoli Developer', dept: 'Frontend', exp: '2+ Years', salary: '6-10 LPA', location: 'Remote', type: 'Remote', skills: 'React, JavaScript', jd: 'Build scalable user interfaces for healthcare workforce products and collaborate with design and backend teams.' }
+
         rows = cursor.fetchall()
         print(f"[DEBUG GET /api/jobs] Database returned {len(rows) if rows else 0} entries.")
     except Exception as exc:
