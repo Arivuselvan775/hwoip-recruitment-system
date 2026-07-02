@@ -18,7 +18,7 @@ def build_database_url(raw_url: str) -> str:
     separator = "&" if "?" in raw_url else "?"
     return f"{raw_url}{separator}sslmode=require"
 
-
+print("v1")
 DATABASE_URL = build_database_url(os.getenv("DATABASE_URL", DEFAULT_DATABASE_URL))
 print(f"[DEBUG] Initialized DATABASE_URL (SSL Mode forced if missing)")
 
