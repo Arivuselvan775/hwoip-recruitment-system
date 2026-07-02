@@ -676,6 +676,64 @@ def submit_application(data: ApplicationSubmissionSchema, conn=Depends(get_db)):
         print(f"[DEBUG WARNING /api/applications/submit] Conflict: {exc}")
         if "email" in str(exc):
             raise HTTPException(status_code=400, detail="This email is already registered.") from exc
+        @app.get("/api/candidate/{candidate_id}/applications")
+def get_candidate_applications(candidate_id: str, conn=Depends(get_db)):
+    cursor = conn.cursor()
+
+    try:
+        cursor.execute(
+            """
+            SELECT
+                j.id,
+                j.title,
+                j.department_name,
+                j.location,
+                j.employment_type,
+                j.experience_required,
+                j.salary_min,
+                j.salary_max,
+                ca.application_status
+            FROM candidate_applications ca
+            JOIN jobs j
+                ON ca.job_id = j.id
+            WHERE ca.candidate_id = %s
+            ORDER BY ca.applied_at DESC;
+            """,
+            (candidate_id,)
+        )
+
+        rows = cursor.fetchall()
+
+        applications = []
+
+        for row in rows:
+
+            salary = "Competitive"
+
+            if row["salary_min"] is not None and row["salary_max"] is not None:
+                salary = f"₹{row['salary_min']} - ₹{row['salary_max']}"
+            elif row["salary_min"] is not None:
+                salary = f"₹{row['salary_min']}+"
+            elif row["salary_max"] is not None:
+                salary = f"Up to ₹{row['salary_max']}"
+
+            applications.append({
+                "id": str(row["id"]),
+                "title": row["title"],
+                "dept": row["department_name"] or "General",
+                "location": row["location"] or "Remote",
+                "exp": row["experience_required"] or "Not Specified",
+                "salary": salary,
+                "status": row["application_status"]
+            })
+
+        return {
+            "status": "success",
+            "applications": applications
+        }
+
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
             
         
        
