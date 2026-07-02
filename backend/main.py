@@ -340,6 +340,40 @@ def list_jobs(conn=Depends(get_db)) -> dict:
     print("[DEBUG GET /api/jobs] Fetching published jobs...")
     cursor = conn.cursor()
     try:
+<<<<<<< HEAD
+=======
+        logger.debug("Checking if 'opening_positions' table exists...")
+        cursor.execute("SELECT to_regclass('public.opening_positions')")
+        opening_positions_table = cursor.fetchone()[0]
+        logger.debug(
+            "opening_positions table exists: %s",
+            bool(opening_positions_table),
+        )
+    except Exception as e:
+        logger.exception("Error while checking opening_positions table: %s", e)
+        opening_positions_table = None
+
+    if opening_positions_table:
+        logger.debug("Using opening_positions table.")
+
+        cursor.execute("SELECT COUNT(*) AS count FROM opening_positions")
+        opening_positions_count = cursor.fetchone()["count"]
+
+        logger.debug(
+            "opening_positions row count: %s",
+            opening_positions_count,
+        )
+
+        if opening_positions_count < 10:
+            logger.debug(
+                "Less than 10 records found. Seeding default jobs..."
+            )
+            #seed_default_jobs(cursor)
+            conn.commit()
+            logger.debug("Default jobs seeded successfully.")
+
+        logger.debug("Fetching jobs from opening_positions...")
+>>>>>>> 808c485 (Auto-sync: file changes)
         cursor.execute(
             """
             SELECT j.id, j.title, j.department_name AS dept,
@@ -352,11 +386,84 @@ def list_jobs(conn=Depends(get_db)) -> dict:
             LIMIT 20;
             """
         )
+<<<<<<< HEAD
         rows = cursor.fetchall()
         print(f"[DEBUG GET /api/jobs] Database returned {len(rows) if rows else 0} entries.")
     except Exception as exc:
         print(f"[DEBUG ERROR GET /api/jobs] SQL Execution failed: {exc}")
         rows = []
+=======
+
+    else:
+        logger.debug(
+            "opening_positions table not found. Falling back to jobs table."
+        )
+
+        cursor.execute("SELECT COUNT(*) AS count FROM jobs")
+        jobs_count = cursor.fetchone()["count"]
+
+        logger.debug("jobs table row count: %s", jobs_count)
+
+        if jobs_count == 0:
+            logger.debug("jobs table is empty. Seeding default jobs...")
+            #seed_default_jobs(cursor)
+            conn.commit()
+            logger.debug("Default jobs seeded into jobs table.")
+
+        logger.debug("Fetching jobs table column names...")
+        cursor.execute(
+            """
+            SELECT column_name
+            FROM information_schema.columns
+            WHERE table_schema='public'
+            AND table_name='jobs'
+            """
+        )
+
+        job_columns = {
+            row["column_name"]
+            for row in cursor.fetchall()
+        }
+
+        logger.debug("Available columns: %s", sorted(job_columns))
+
+        if "department_name" in job_columns:
+            logger.debug(
+                "'department_name' column exists. Using direct query."
+            )
+
+            cursor.execute(
+                """
+                SELECT id, title, department_name, location, employment_type, experience_required,
+                       salary_min, salary_max, skills_required, job_description
+                FROM jobs
+                WHERE status <> 'DRAFT'
+                ORDER BY created_at DESC
+                LIMIT 20;
+                """
+            )
+
+        else:
+            logger.debug(
+                "'department_name' column missing. Joining with departments table."
+            )
+
+            cursor.execute(
+                """
+                SELECT j.id, j.title, d.department_name, j.location,
+                       j.employment_type, j.experience_required,
+                       j.salary_min, j.salary_max,
+                       j.skills_required, j.job_description
+                FROM jobs j
+                LEFT JOIN departments d ON d.id = j.department_id
+                WHERE j.status <> 'DRAFT'
+                ORDER BY j.created_at DESC
+                LIMIT 20;
+                """
+            )
+
+    rows = cursor.fetchall()
+>>>>>>> 808c485 (Auto-sync: file changes)
 
     logger.debug("Fetched %d job records.", len(rows))
 
