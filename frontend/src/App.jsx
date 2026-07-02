@@ -5,7 +5,7 @@ import ApplicationForm from './ApplicationForm';
 import CandidateDashboard from './CandidateDashboard';
 
 const fallbackJobs = [
-  { id: 1, title: 'React Developer', dept: 'Frontend', exp: '2+ Years', salary: '6-10 LPA', location: 'Remote', type: 'Remote', skills: 'React, JavaScript', jd: 'Build scalable user interfaces for healthcare workforce products and collaborate with design and backend teams.' },
+  { id: 1, title: 'Arivoli Developer', dept: 'Frontend', exp: '2+ Years', salary: '6-10 LPA', location: 'Remote', type: 'Remote', skills: 'React, JavaScript', jd: 'Build scalable user interfaces for healthcare workforce products and collaborate with design and backend teams.' },
   { id: 2, title: 'FastAPI Backend', dept: 'Backend', exp: '3+ Years', salary: '8-12 LPA', location: 'Hybrid', type: 'Hybrid', skills: 'Python, FastAPI', jd: 'Design REST APIs and data models for recruitment workflows, integrations, and reporting.' }
 ];
 
