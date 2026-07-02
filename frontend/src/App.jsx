@@ -93,21 +93,10 @@ function App() {
         .replace(/_/g, ' ')
         .replace(/\b\w/g, (char) => char.toUpperCase());
 
-  if (user.role === "CANDIDATE") {
-
-    // Load candidate applied jobs from backend
-    const applicationsResponse = await axios.get(
-        `${apiBaseUrl}/api/candidate/${user.id}/applications`
-    );
-
-    setAppliedJobs(
-        applicationsResponse.data.applications || []
-    );
-
-    setCandidateUser(user);
-
-    setView("dashboard");
-}
+      if (user.role === 'CANDIDATE') {
+        setCandidateUser(user);
+        setView('dashboard');
+      }
 
       setSuccessMessage(
         `Signed in successfully as ${roleLabel}.`

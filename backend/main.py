@@ -557,76 +557,20 @@ def submit_application(data: ApplicationSubmissionSchema, conn=Depends(get_db)):
                 print(f"[DEBUG WARNING] Numerical experience conversion exception from raw value: '{data.experience}'")
                 experience_years = None
 
-                # Check if candidate already exists
+        candidate_id = str(uuid4())
+        print(f"[DEBUG] Registering entry profiles for Candidate ID: {candidate_id}")
         cursor.execute(
             """
-            SELECT id
-            FROM candidates
-            WHERE email = %s;
+            INSERT INTO candidates (
+                id, username, email, password_hash, full_name, phone_number, address, gender,
+                degree, graduation_year, experience_years, skills, current_company, expected_salary,
+                cover_letter, resume_file_name, resume_file_url, source_channel, current_status
+            )
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);
             """,
-            (str(data.email),)
+            (candidate_id, username, str(data.email), data.password, data.fullName, data.phoneNumber, data.address, data.gender, data.degree, data.graduationYear, experience_years, data.skills, data.currentCompany, data.expectedSalary, data.coverLetter, data.resumeName, data.resumeData, "PUBLIC_FORM", "APPLIED"),
         )
 
-        existing_candidate = cursor.fetchone()
-
-        if existing_candidate:
-            candidate_id = str(existing_candidate["id"])
-            print(f"[DEBUG] Existing Candidate Found : {candidate_id}")
-
-        else:
-            candidate_id = str(uuid4())
-
-            print(f"[DEBUG] Creating New Candidate : {candidate_id}")
-
-            cursor.execute(
-                """
-                INSERT INTO candidates (
-                    id,
-                    username,
-                    email,
-                    password_hash,
-                    full_name,
-                    phone_number,
-                    address,
-                    gender,
-                    degree,
-                    graduation_year,
-                    experience_years,
-                    skills,
-                    current_company,
-                    expected_salary,
-                    cover_letter,
-                    resume_file_name,
-                    resume_file_url,
-                    source_channel,
-                    current_status
-                )
-                VALUES (
-                    %s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s
-                );
-                """,
-                (
-                    candidate_id,
-                    username,
-                    str(data.email),
-                    data.password,
-                    data.fullName,
-                    data.phoneNumber,
-                    data.address,
-                    data.gender,
-                    data.degree,
-                    data.graduationYear,
-                    experience_years,
-                    data.skills,
-                    data.currentCompany,
-                    data.expectedSalary,
-                    data.coverLetter,
-                    data.resumeName,
-                    data.resumeData,
-                    "PUBLIC_FORM",
-                    "APPLIED",
-                ),
-            )
         print(f"[DEBUG] Checking if job profile already exists for '{data.jobTitle}'")
         cursor.execute("SELECT id FROM jobs WHERE title = %s LIMIT 1;", (data.jobTitle,))
         existing_job = cursor.fetchone()
@@ -676,65 +620,6 @@ def submit_application(data: ApplicationSubmissionSchema, conn=Depends(get_db)):
         print(f"[DEBUG WARNING /api/applications/submit] Conflict: {exc}")
         if "email" in str(exc):
             raise HTTPException(status_code=400, detail="This email is already registered.") from exc
-        
-        @app.get("/api/candidate/{candidate_id}/applications")
-        def get_candidate_applications(candidate_id: str, conn=Depends(get_db)):
-            cursor = conn.cursor()
-    try:
-        cursor.execute(
-            """
-            SELECT
-                j.id,
-                j.title,
-                j.department_name,
-                j.location,
-                j.employment_type,
-                j.experience_required,
-                j.salary_min,
-                j.salary_max,
-                ca.application_status
-            FROM candidate_applications ca
-            JOIN jobs j
-                ON ca.job_id = j.id
-            WHERE ca.candidate_id = %s
-            ORDER BY ca.applied_at DESC;
-            """,
-            (candidate_id,)
-        )
-
-        rows = cursor.fetchall()
-
-        applications = []
-
-        for row in rows:
-
-            salary = "Competitive"
-
-            if row["salary_min"] is not None and row["salary_max"] is not None:
-                salary = f"₹{row['salary_min']} - ₹{row['salary_max']}"
-            elif row["salary_min"] is not None:
-                salary = f"₹{row['salary_min']}+"
-            elif row["salary_max"] is not None:
-                salary = f"Up to ₹{row['salary_max']}"
-
-            applications.append({
-                "id": str(row["id"]),
-                "title": row["title"],
-                "dept": row["department_name"] or "General",
-                "location": row["location"] or "Remote",
-                "exp": row["experience_required"] or "Not Specified",
-                "salary": salary,
-                "status": row["application_status"]
-            })
-
-        return {
-            "status": "success",
-            "applications": applications
-        }
-
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-        
             
         
        
